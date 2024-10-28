@@ -97,7 +97,6 @@
          (value (second parts)))
     (format nil "(setf ~A ~A)" var (parse-arithmetic value))))
 
-
 (defun convert-function-definition (line)
   "Converts a function definition from C to Lisp."
   (let* ((tokens (cl-ppcre:split "\\s+" line))
