@@ -5,7 +5,7 @@ c
 ))
 (defun main ()
 (let* ((x 10)
-(let ((y 20))
+(y 20))
 (setf result (sum x y))
 (if (> result 25) (progn
 (format t "Result is greater than 25~%")

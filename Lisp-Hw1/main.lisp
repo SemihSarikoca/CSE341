@@ -14,8 +14,6 @@
   (cond
     ;; if statement
     ((cl-ppcre:scan "if\\s*\\(.*\\)\\s*\\{" line) 'if-statement)
-    ;; else statement
-    ((cl-ppcre:scan "else\\s*\\{" line) 'else-statement)
     ;; for loop
     ((cl-ppcre:scan "for\\s*\\(.*\\)\\s*\\{" line) 'for-loop)
     ;; while loop

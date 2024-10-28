@@ -1,6 +1,3 @@
-(defvar *if-condition-stack* nil
-  "Stack to keep track of if conditions for corresponding else statements.")
-
 (defvar *first-definition* t
   "Flag to check if the current line is the first variable definition.")
 
@@ -8,7 +5,6 @@
   "Selects the appropriate conversion function based on the line type."
   (case line-type
     (if-statement 'convert-if)
-    (else-statement 'convert-else)
     (for-loop 'convert-for)
     (while-loop 'convert-while)
     (function-definition 'convert-function-definition)
@@ -36,13 +32,7 @@
   (let* ((start (search "(" line))
          (end (search ")" line :start2 start))
          (condition (subseq line (1+ start) end)))
-    (push (parse-condition condition) *if-condition-stack*)
     (format nil "(if ~A (progn" (parse-condition condition))))
-
-(defun convert-else (line)
-  "Converts an else statement from C to Lisp."
-  (let ((condition (pop *if-condition-stack*)))
-    (format nil "(if (not ~A) (progn" condition)))
 
 (defun convert-for (line)
   "Converts a for loop from C to Lisp."
