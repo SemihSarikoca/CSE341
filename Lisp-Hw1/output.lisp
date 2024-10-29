@@ -12,7 +12,7 @@ c
 (setf x 5)
 ))
 (loop for i = 0
-then (setf i (+ i x))
+then (incf i)
 while (< i 10) do (progn
 (format t "~A~%" i)
 ))

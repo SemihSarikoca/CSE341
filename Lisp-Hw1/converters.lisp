@@ -65,7 +65,7 @@
   (let* ((parts (cl-ppcre:split "\\s*=\\s*" current-line))
          (var (second (cl-ppcre:split "\\s+" (first parts))))
          (value (string-trim '(#\;) (second parts)))
-         (is-last-definition (or (null next-line) (not (cl-ppcre:scan "\\w+\\s+\\w+\\s*=\\s*\\w+;" next-line)))))
+         (is-last-definition (not (eq (line-type next-line) 'variable-definition))))
     (cond
       (*first-definition*
        (setf *first-definition* nil)
@@ -109,26 +109,9 @@
          (args-start (1+ name-end))
          (args-end (search ")" line :start2 args-start))
          (args (subseq line args-start args-end))
-         (arg-types (mapcar (lambda (arg)
-                              (cond
-                                ((cl-ppcre:scan "int" arg) "integer")
-                                ((cl-ppcre:scan "float" arg) "float")
-                                ((cl-ppcre:scan "double" arg) "float")
-                                ((cl-ppcre:scan "bool" arg) "boolean")
-                                ((cl-ppcre:scan "char" arg) "character")
-                                (t "unknown")))
-                            (cl-ppcre:split "\\s*,\\s*" args)))
-         (lisp-return-type (cond
-                             ((string= return-type "int") "integer")
-                             ((string= return-type "float") "float")
-                             ((string= return-type "double") "float")
-                             ((string= return-type "bool") "boolean")
-                             ((string= return-type "char") "character")
-                             (t "unknown"))))
-    (format nil "(declaim (ftype (function (~{~A~^ ~}) ~A) ~A))"
-            arg-types
-            lisp-return-type
-            name)))
+         (arg-types (mapcar #'type-converter (cl-ppcre:split "\\s*,\\s*" args)))
+         (lisp-return-type (type-converter return-type)))
+    (format nil "(declaim (ftype (function (~{~A~^ ~}) ~A) ~A))" arg-types lisp-return-type name)))
 
 (defun convert-function-call (line)
   "Converts a function call from C to Lisp."
@@ -167,6 +150,4 @@
 
 (defun convert-unknown (line)
   "Handles unknown lines of C code."
-  (if (string= line "")
-      nil
-      (format nil ";; Unknown line: ~A" line)))
+  (format nil ";; Unknown line: ~A" line))

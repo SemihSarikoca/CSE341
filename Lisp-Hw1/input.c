@@ -15,7 +15,7 @@ int main() {
         x = 5;
     }
 
-    for (int i = 0; i < 10; i = i + x) {
+    for (int i = 0; i < 10;i++) {
         printf("%d\n", i);
     }
 
