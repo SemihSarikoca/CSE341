@@ -9,14 +9,6 @@
                             (return (format nil "(~C ~A ~A)" op (parse-arithmetic left) (parse-arithmetic right))))
             finally (return (string-trim '(#\space #\;) expression)))))
 
-(defun split-string (delimiter string)
-  "Splits STRING into substrings bounded by matches for DELIMITER."
-  (loop with start = 0
-        for end = (position delimiter string :start start) 
-        collect (subseq string start end)
-        while end do (setf start (1+ end))))
-
-
 (defun parse-condition (condition)
   "Parses a C condition and converts it to Lisp prefix notation."
   (labels ((parse-or (condition)
@@ -45,18 +37,7 @@
                      finally (return condition)))))
     (parse-or condition)))
 
-(defun remove-types (params)
-  "Removes types from parameter list."
-  (let ((param-list (cl-ppcre:split "," params)))
-    (reduce (lambda (acc param)
-              (let ((tokens (cl-ppcre:split "\\s+" (string-trim '(#\space) param))))
-                (if acc
-                    (concatenate 'string acc " " (second tokens))
-                    (second tokens))))
-            param-list
-            :initial-value '())))
-
-(defun parse-inc (increment)
+(defun parse-inc (increment) ;; only used by convert-for function for simplicity of the code
   "Parses the increment part of a for loop."
   (cond
     ((cl-ppcre:scan "\\+\\+" increment)
@@ -71,7 +52,18 @@
             (value (string-trim '(#\space) (second parts))))
        (format nil "(setf ~A ~A)" var (parse-arithmetic value))))))
 
-(defun type-converter (arg)
+(defun remove-types (params) ;; only used by convert-function-definition function for simplicity of the code
+  "Removes types from parameter list."
+  (let ((param-list (cl-ppcre:split "," params)))
+    (reduce (lambda (acc param)
+              (let ((tokens (cl-ppcre:split "\\s+" (string-trim '(#\space) param))))
+                (if acc
+                    (concatenate 'string acc " " (second tokens))
+                    (second tokens))))
+            param-list
+            :initial-value '())))
+
+(defun type-converter (arg) ;; only used by convert-function-prototype function for simplicity of the code
   (cond                                
     ((cl-ppcre:scan "int" arg) "integer")
     ((cl-ppcre:scan "float" arg) "float")
@@ -79,3 +71,10 @@
     ((cl-ppcre:scan "bool" arg) "boolean")
     ((cl-ppcre:scan "char" arg) "character")
     (t "unknown")))
+
+(defun split-string (delimiter string) ;; only used by parse-arithmetric function because the cl-ppcre:split function does not work as expected
+  "Splits STRING into substrings bounded by matches for DELIMITER."
+  (loop with start = 0
+        for end = (position delimiter string :start start) 
+        collect (subseq string start end)
+        while end do (setf start (1+ end))))

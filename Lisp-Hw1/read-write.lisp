@@ -12,4 +12,4 @@
     (dolist (line content)
       (when line
         (write-line line stream)))
-    (write-line "(main)" stream)))
+    (write-line "(main)" stream))) ;; can be removed if main is not needed or is called differently

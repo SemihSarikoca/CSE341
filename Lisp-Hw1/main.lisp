@@ -41,7 +41,7 @@
   "Processes each line and converts it to Lisp code recursively."
   (labels ((process-helper (lines index result)
              (if (>= index (length lines))
-                 (reverse result)
+                 (reverse result) ;; exit condition
                  (let ((line (nth index lines))
                        (next-line (nth (1+ index) lines)))
                    (process-helper lines (1+ index) (cons (convert line next-line) result))))))

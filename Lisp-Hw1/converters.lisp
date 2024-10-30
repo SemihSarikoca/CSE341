@@ -1,6 +1,3 @@
-(defvar *first-definition* t
-  "Flag to check if the current line is the first variable definition.")
-
 (defun conversion-foo (line-type)
   "Selects the appropriate conversion function based on the line type."
   (case line-type
@@ -151,3 +148,6 @@
 (defun convert-unknown (line)
   "Handles unknown lines of C code."
   (format nil ";; Unknown line: ~A" line))
+
+(defvar *first-definition* t
+  "Flag to check if the current line is the first variable definition.")
