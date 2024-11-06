@@ -30,8 +30,7 @@
   (let ((colon-pos (position #\: word)))
     (and colon-pos
          (every #'digit-char-p (subseq word 0 colon-pos))
-         (every #'digit-char-p (subseq word (1+ colon-pos)))
-         (not (string= (subseq word (1+ colon-pos)) "0")))))
+         (every #'digit-char-p (subseq word (1+ colon-pos))))))
 
 (defun is-identifier (word)
   ;; Checks if a word is a valid identifier (letters, digits, and underscores, starts with a letter)
@@ -92,7 +91,8 @@
           (loop for line = (read-line stream nil)
                 while line do
                 (let ((tokens (tokenize line)))
-                  (format t "~{~a~%~}" tokens)))))
+                  (format t "~{~a~%~}" tokens))))
+        (read-eval-print-loop))
       (read-eval-print-loop)))
 
 ;; Test the gppinterpreter function
