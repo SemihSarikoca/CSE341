@@ -1,0 +1,10 @@
+;; hello.g++
+(deffun sumup (x)
+;; function body
+   (if (equal x 0)
+        1
+        (+ x (sumup (- x 1)))
+    )
+  )
+(list 1 2 123:12)
+(liste 1 2 3)
