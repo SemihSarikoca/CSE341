@@ -3,6 +3,7 @@
 #include <string.h>
 
 void yyerror(const char *s);
+int yycolumn = 1; // Column number
 %}
 
 %option noyywrap
@@ -43,14 +44,14 @@ void yyerror(const char *s);
 
 ";;".*      { printf("COMMENT\n"); }
 
-[ \t\n]+    ;  // Ignore whitespace
+[ \t\n]+    { yycolumn += yyleng; }  // Ignore whitespace and update column
 
-.           { printf("SYNTAX_ERROR\n"); }
+.           { yyerror("SYNTAX_ERROR"); }
 
 %%
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s\n", s);
+    fprintf(stderr, "Error: %s at line %d, column %d: %s\n", s, yylineno, yycolumn, yytext);
 }
 
 int main(int argc, char **argv) {
