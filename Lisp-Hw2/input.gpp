@@ -1,4 +1,4 @@
-;; hello.g++
+;; hello.gpp
 (deffun sumup (x)
 ;; function body
    (if (equal x 0)

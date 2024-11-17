@@ -1,10 +1,12 @@
 #!/bin/bash
-
+mkdir -p build
+flex -o build/gpp_lexer.c src/gpp_lexer.l
+gcc -o build/gpp_lexer build/gpp_lexer.c -ll
 # Check if an argument is provided
 if [ $# -eq 0 ]; then
     # No argument provided, run the lexer in REPL mode
-    ./bin/gpp_lexer
+    ./build/gpp_lexer
 else
     # Argument provided, run the lexer with the provided file
-    ./bin/gpp_lexer "$1"
-fi
+    ./build/gpp_lexer "$1"
+fi 

@@ -9,11 +9,11 @@
   '(("+" . OP_PLUS) ("-" . OP_MINUS) ("/" . OP_DIV)
     ("*" . OP_MULT) ("(" . OP_OP) (")" . OP_CP)
     ("," . OP_COMMA)))
-(defparameter *comment-token* 'COMMENT)      ; For comments starting with ;;
-(defparameter *fraction-token* 'VALUEF)      ; For fractions like 123:12
-(defparameter *integer-token* 'VALUEI)       ; For integers like 123
-(defparameter *identifier-token* 'IDENTIFIER) ; For valid identifiers
-(defparameter *syntax-error-token* 'SYNTAX_ERROR) ; For unknown tokens or errors
+(defparameter *comment-token* 'COMMENT)
+(defparameter *fraction-token* 'VALUEF)
+(defparameter *integer-token* 'VALUEI)
+(defparameter *identifier-token* 'IDENTIFIER)
+(defparameter *syntax-error-token* 'SYNTAX_ERROR)
 
 (defun keyword-token (word)
   (cdr (assoc word *keywords* :test #'string=)))
@@ -22,15 +22,15 @@
   (cdr (assoc symbol *operators* :test #'string=)))
 
 (defun is-integer (word)
-  ;; Checks if a word represents an integer
   (every #'digit-char-p word))
 
 (defun is-fraction (word)
-  ;; Checks if a word represents a fraction like 123:45
   (let ((colon-pos (position #\: word)))
     (and colon-pos
-         (every #'digit-char-p (subseq word 0 colon-pos))
-         (every #'digit-char-p (subseq word (1+ colon-pos))))))
+         (not (zerop colon-pos)) ; Ensure there are digits before the colon
+         (not (zerop (- (length word) (1+ colon-pos)))) ; Ensure there are digits after the colon
+         (is-integer (subseq word 0 colon-pos))
+         (is-integer (subseq word (1+ colon-pos))))))
 
 (defun is-identifier (word)
   ;; Checks if a word is a valid identifier (letters, digits, and underscores, starts with a letter)
@@ -52,7 +52,7 @@
            (cond
              ((char= char #\Space)
               (add-token))
-             ((or (char= char #\() (char= char #\)))
+             ((find char '(#\+ #\- #\/ #\* #\( #\) #\,))
               (add-token)
               (push (string char) tokens))
              (t
@@ -70,7 +70,8 @@
                          ((is-fraction word) *fraction-token*)
                          ((is-identifier word) *identifier-token*)
                          ((is-comment word) *comment-token*)
-                         (t *syntax-error-token*)))))
+                         (t
+                          (format nil "~a: \"~a\" cannot be tokenized" *syntax-error-token* word))))))
         (push token tokens)
         (when (eq token *comment-token*)
           (return-from tokenize tokens))))
@@ -94,7 +95,3 @@
                   (format t "~{~a~%~}" tokens))))
         (read-eval-print-loop))
       (read-eval-print-loop)))
-
-;; Test the gppinterpreter function
-;(gppinterpreter "myhelloworld.g++")
-(gppinterpreter)

@@ -1,0 +1,16 @@
+#!/bin/bash
+mkdir -p build
+# Check if an argument is provided
+if [ $# -eq 0 ]; then
+    # No argument provided, run the interpreter in REPL mode
+    echo '(load "src/gpp_lexer.lisp") (gppinterpreter)' > build/temp_run.lisp
+else
+    # Argument provided, run the interpreter with the provided file
+    echo "(load \"src/gpp_lexer.lisp\") (gppinterpreter \"$1\")" > build/temp_run.lisp
+fi
+
+# Run the temporary Lisp file
+clisp build/temp_run.lisp
+
+# Remove the temporary Lisp file
+rm build/temp_run.lisp
