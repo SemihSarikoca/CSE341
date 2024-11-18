@@ -1,14 +1,16 @@
-(defparameter *keywords* 
+(defparameter *keywords*
   '(("and" . KW_AND) ("or" . KW_OR) ("not" . KW_NOT)
     ("equal" . KW_EQUAL) ("less" . KW_LESS) ("nil" . KW_NIL)
     ("list" . KW_LIST) ("append" . KW_APPEND) ("concat" . KW_CONCAT)
     ("set" . KW_SET) ("deffun" . KW_DEFFUN) ("for" . KW_FOR)
     ("if" . KW_IF) ("exit" . KW_EXIT) ("load" . KW_LOAD)
     ("print" . KW_DISP) ("true" . KW_TRUE) ("false" . KW_FALSE)))
+
 (defparameter *operators*
   '(("+" . OP_PLUS) ("-" . OP_MINUS) ("/" . OP_DIV)
     ("*" . OP_MULT) ("(" . OP_OP) (")" . OP_CP)
     ("," . OP_COMMA)))
+
 (defparameter *comment-token* 'COMMENT)
 (defparameter *fraction-token* 'VALUEF)
 (defparameter *integer-token* 'VALUEI)
@@ -22,24 +24,23 @@
   (cdr (assoc symbol *operators* :test #'string=)))
 
 (defun is-integer (word)
-  (every #'digit-char-p word))
+  (and (not (zerop (length word)))
+       (every #'digit-char-p word)))
 
 (defun is-fraction (word)
   (let ((colon-pos (position #\: word)))
     (and colon-pos
-         (not (zerop colon-pos)) ; Ensure there are digits before the colon
-         (not (zerop (- (length word) (1+ colon-pos)))) ; Ensure there are digits after the colon
          (is-integer (subseq word 0 colon-pos))
          (is-integer (subseq word (1+ colon-pos))))))
 
 (defun is-identifier (word)
-  ;; Checks if a word is a valid identifier (letters, digits, and underscores, starts with a letter)
   (and (alpha-char-p (char word 0))
        (every (lambda (c) (or (alpha-char-p c) (digit-char-p c) (char= c #\_))) word)))
 
 (defun is-comment (word)
-  ;; Checks if a word is a comment starting with ;;
-  (string= word ";;"))
+  (when (>= (length word) 2)
+    (and (char= (char word 0) #\;)
+         (char= (char word 1) #\;))))
 
 (defun split-line (line)
   (let ((tokens '())
@@ -50,6 +51,10 @@
                  (setf current-token ""))))
       (loop for char across line do
            (cond
+             ((char= char #\;)
+              (add-token)
+              (push (subseq line (position #\; line)) tokens)
+              (return))
              ((char= char #\Space)
               (add-token))
              ((find char '(#\+ #\- #\/ #\* #\( #\) #\,))
@@ -63,7 +68,7 @@
 (defun tokenize (line)
   (let ((tokens '()))
     (dolist (word (split-line line))
-      (let ((token (or (keyword-token word)
+      (leT ((token (oR (keyword-token word)
                        (operator-token word)
                        (cond
                          ((is-integer word) *integer-token*)
@@ -74,7 +79,7 @@
                           (format nil "~a: \"~a\" cannot be tokenized" *syntax-error-token* word))))))
         (push token tokens)
         (when (eq token *comment-token*)
-          (return-from tokenize tokens))))
+          (return-from tokenize (reverse tokens)))))
     (reverse tokens)))
 
 (defun read-eval-print-loop ()
@@ -82,8 +87,10 @@
     (format t "> ")
     (let ((line (read-line *standard-input* nil)))
       (when line
-        (let ((tokens (tokenize line)))
-          (format t "~{~a~%~}" tokens))))))
+        (if (string= line "(quit)")
+            (return)
+            (let ((tokens (tokenize line)))
+              (format t "~{~a~%~}" tokens)))))))
 
 (defun gppinterpreter (&optional (filename nil))
   (if filename

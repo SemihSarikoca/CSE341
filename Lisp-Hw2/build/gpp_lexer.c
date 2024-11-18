@@ -761,7 +761,7 @@ YY_DECL
 		}
 
 	{
-#line 35 "src/gpp_lexer.l"
+#line 37 "src/gpp_lexer.l"
 
 
 #line 767 "build/gpp_lexer.c"
@@ -823,163 +823,163 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 37 "src/gpp_lexer.l"
+#line 39 "src/gpp_lexer.l"
 { printf("KW_AND\n"); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 38 "src/gpp_lexer.l"
+#line 40 "src/gpp_lexer.l"
 { printf("KW_OR\n"); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 39 "src/gpp_lexer.l"
+#line 41 "src/gpp_lexer.l"
 { printf("KW_NOT\n"); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "src/gpp_lexer.l"
+#line 42 "src/gpp_lexer.l"
 { printf("KW_EQUAL\n"); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 41 "src/gpp_lexer.l"
+#line 43 "src/gpp_lexer.l"
 { printf("KW_LESS\n"); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 42 "src/gpp_lexer.l"
+#line 44 "src/gpp_lexer.l"
 { printf("KW_NIL\n"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 43 "src/gpp_lexer.l"
+#line 45 "src/gpp_lexer.l"
 { printf("KW_LIST\n"); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 44 "src/gpp_lexer.l"
+#line 46 "src/gpp_lexer.l"
 { printf("KW_APPEND\n"); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 45 "src/gpp_lexer.l"
+#line 47 "src/gpp_lexer.l"
 { printf("KW_CONCAT\n"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 46 "src/gpp_lexer.l"
+#line 48 "src/gpp_lexer.l"
 { printf("KW_SET\n"); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 47 "src/gpp_lexer.l"
+#line 49 "src/gpp_lexer.l"
 { printf("KW_DEFFUN\n"); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 48 "src/gpp_lexer.l"
+#line 50 "src/gpp_lexer.l"
 { printf("KW_FOR\n"); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 49 "src/gpp_lexer.l"
+#line 51 "src/gpp_lexer.l"
 { printf("KW_IF\n"); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 50 "src/gpp_lexer.l"
+#line 52 "src/gpp_lexer.l"
 { printf("KW_EXIT\n"); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 51 "src/gpp_lexer.l"
+#line 53 "src/gpp_lexer.l"
 { printf("KW_LOAD\n"); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 52 "src/gpp_lexer.l"
+#line 54 "src/gpp_lexer.l"
 { printf("KW_DISP\n"); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 53 "src/gpp_lexer.l"
+#line 55 "src/gpp_lexer.l"
 { printf("KW_TRUE\n"); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 54 "src/gpp_lexer.l"
+#line 56 "src/gpp_lexer.l"
 { printf("KW_FALSE\n"); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 56 "src/gpp_lexer.l"
+#line 58 "src/gpp_lexer.l"
 { printf("OP_PLUS\n"); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 57 "src/gpp_lexer.l"
+#line 59 "src/gpp_lexer.l"
 { printf("OP_MINUS\n"); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 58 "src/gpp_lexer.l"
+#line 60 "src/gpp_lexer.l"
 { printf("OP_DIV\n"); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 59 "src/gpp_lexer.l"
+#line 61 "src/gpp_lexer.l"
 { printf("OP_MULT\n"); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 60 "src/gpp_lexer.l"
+#line 62 "src/gpp_lexer.l"
 { printf("OP_OP\n"); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "src/gpp_lexer.l"
+#line 63 "src/gpp_lexer.l"
 { printf("OP_CP\n"); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 62 "src/gpp_lexer.l"
+#line 64 "src/gpp_lexer.l"
 { printf("OP_COMMA\n"); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 64 "src/gpp_lexer.l"
+#line 66 "src/gpp_lexer.l"
 { printf("VALUEF\n"); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 65 "src/gpp_lexer.l"
+#line 67 "src/gpp_lexer.l"
 { printf("VALUEI\n"); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 67 "src/gpp_lexer.l"
+#line 69 "src/gpp_lexer.l"
 { printf("IDENTIFIER\n"); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 69 "src/gpp_lexer.l"
+#line 71 "src/gpp_lexer.l"
 { printf("COMMENT\n"); }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 71 "src/gpp_lexer.l"
+#line 73 "src/gpp_lexer.l"
 { yycolumn += yyleng; }  // Ignore whitespace and update column
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 73 "src/gpp_lexer.l"
+#line 75 "src/gpp_lexer.l"
 { yyerror("SYNTAX_ERROR"); }  // Invalid token
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "src/gpp_lexer.l"
+#line 77 "src/gpp_lexer.l"
 ECHO;
 	YY_BREAK
 #line 985 "build/gpp_lexer.c"
@@ -1987,7 +1987,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 75 "src/gpp_lexer.l"
+#line 77 "src/gpp_lexer.l"
 
 
 void yyerror(const char *s) {

@@ -10,7 +10,9 @@ int yycolumn = 1; // Column number
 
 VALUEI [0-9]+
 VALUEF {VALUEI}:{VALUEI}
+
 IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
+
 COMMENT ;;.*
 
 KW_AND ([aA][nN][dD])
@@ -53,13 +55,13 @@ KW_FALSE ([fF][aA][lL][sS][eE])
 {KW_TRUE}      { printf("KW_TRUE\n"); }
 {KW_FALSE}     { printf("KW_FALSE\n"); }
 
-"+"            { printf("OP_PLUS\n"); }
-"-"            { printf("OP_MINUS\n"); }
-"/"            { printf("OP_DIV\n"); }
-"*"            { printf("OP_MULT\n"); }
-"("            { printf("OP_OP\n"); }
-")"            { printf("OP_CP\n"); }
-","            { printf("OP_COMMA\n"); }
+\+            { printf("OP_PLUS\n"); }
+\-            { printf("OP_MINUS\n"); }
+\/            { printf("OP_DIV\n"); }
+\*            { printf("OP_MULT\n"); }
+\(            { printf("OP_OP\n"); }
+\)            { printf("OP_CP\n"); }
+\,            { printf("OP_COMMA\n"); }
 
 {VALUEF}       { printf("VALUEF\n"); }
 {VALUEI}       { printf("VALUEI\n"); }
