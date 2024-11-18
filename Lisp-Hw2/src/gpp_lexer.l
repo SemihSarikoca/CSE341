@@ -1,6 +1,5 @@
 %{
 #include <stdio.h>
-#include <string.h>
 
 void yyerror(const char *s);
 int yycolumn = 1; // Column number
@@ -13,7 +12,7 @@ VALUEF {VALUEI}:{VALUEI}
 
 IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 
-COMMENT ;;.*
+COMMENT ";;".*
 
 KW_AND ([aA][nN][dD])
 KW_OR ([oO][rR])
@@ -55,13 +54,13 @@ KW_FALSE ([fF][aA][lL][sS][eE])
 {KW_TRUE}      { printf("KW_TRUE\n"); }
 {KW_FALSE}     { printf("KW_FALSE\n"); }
 
-\+            { printf("OP_PLUS\n"); }
-\-            { printf("OP_MINUS\n"); }
-\/            { printf("OP_DIV\n"); }
-\*            { printf("OP_MULT\n"); }
-\(            { printf("OP_OP\n"); }
-\)            { printf("OP_CP\n"); }
-\,            { printf("OP_COMMA\n"); }
+\+             { printf("OP_PLUS\n"); }
+\-             { printf("OP_MINUS\n"); }
+\/             { printf("OP_DIV\n"); }
+\*             { printf("OP_MULT\n"); }
+\(             { printf("OP_OP\n"); }
+\)             { printf("OP_CP\n"); }
+\,             { printf("OP_COMMA\n"); }
 
 {VALUEF}       { printf("VALUEF\n"); }
 {VALUEI}       { printf("VALUEI\n"); }
@@ -71,13 +70,15 @@ KW_FALSE ([fF][aA][lL][sS][eE])
 {COMMENT}      { printf("COMMENT\n"); }
 
 [ \t\n]+       { yycolumn += yyleng; }  // Ignore whitespace and update column
+";"            { yyerror("SYNTAX_ERROR"); }  // Invalid token
+[^\n\t\(\)\+\-\/\*\,; ]+ { yyerror("SYNTAX_ERROR"); }  // Invalid token
 
-[^\n\t\(\)\+\-\/\*\, ]+ { yyerror("SYNTAX_ERROR"); }  // Invalid token
+"(quit)"       { return 0; }  // Exit
 
 %%
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s at line %d, column %d: %s\n", s, yylineno, yycolumn, yytext);
+    fprintf(stderr, "Error: %s at line %d, column %d: can not tokenize: %s\n", s, yylineno, yycolumn, yytext);
 }
 
 int main(int argc, char **argv) {
