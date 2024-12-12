@@ -24,7 +24,7 @@ int symbol_count = 0;
 
 typedef struct {
     char *name;       // Fonksiyon adı
-    float param;      // Fonksiyon parametresi (şimdilik sadece bir tane)
+    char *param;      // Fonksiyon parametresi
     float body;       // Fonksiyon gövdesi (şimdilik sabit bir değer)
 } function_t;
 
@@ -53,9 +53,10 @@ void add_symbol(char *name, float value) {
     symbol_count++;
 }
 
-void add_function(char *name, float body) {
+void add_function(char *name, char *param, float body) {
     function_t *f = &function_table[function_count++];
     f->name = strdup(name);
+    f->param = strdup(param);
     f->body = body;
 }
 
@@ -77,16 +78,16 @@ function_t *lookup_function(char *name) {
 
 %token <fval> VALUEF
 %token <sval> IDENTIFIER
-%token OP_PLUS OP_MINUS OP_MULT OP_DIV OP_OP OP_CP OP_COMMA
-%token KW_SET KW_DEFFUN KW_IF KW_WHILE KW_FOR KW_NIL KW_APPEND KW_CONCAT
+%token OP_PLUS OP_MINUS OP_MULT OP_DIV OP_OP OP_CP
+%token KW_SET KW_DEFFUN KW_IF KW_WHILE KW_FOR
 %token KW_TRUE KW_FALSE
-%token KW_AND KW_OR KW_NOT KW_EQUAL KW_LESS KW_LIST
+%token KW_AND KW_OR KW_NOT KW_EQUAL KW_LESS
 %token KW_EXIT
 %token KW_DISP
 
-%type <fval> EXP ARITHMETIC_EXP LOGICAL_EXP BOOLEAN FUNCTION_DEF FCALL
-%type <fval> LIST EXPLIST
-%type <sval> DISPLAY
+%type <fval> EXP EXPLIST ARITHMETIC_EXP LOGICAL_EXP BOOLEAN 
+%type <fval> FUNCTION_DEF FCALL
+%type <fval> DISPLAY CONTROL_STATEMENT QUIT ASSIGNMENT
 
 %left OP_PLUS OP_MINUS
 %left OP_MULT OP_DIV
@@ -100,29 +101,12 @@ START:
     ;
 
 INPUT:
-    INPUT STATEMENT
-    | INPUT EXP
-    | STATEMENT
-    | EXP
-    ;
-
-LIST:
-    OP_OP KW_LIST VALUES OP_CP
-    | OP_OP KW_LIST OP_CP
-    | KW_NIL
-    | OP_OP KW_APPEND LIST LIST OP_CP { /* Append logic */ }
-    | OP_OP KW_CONCAT LIST LIST OP_CP { /* Concat logic */ }
-    ;
-
-VALUES:
-    VALUES OP_COMMA VALUEF
-    | VALUEF
+    EXPLIST
     ;
 
 EXPLIST:
-    OP_OP EXPLIST EXP OP_CP { $$ = $3; }
+    EXPLIST EXP
     | EXP
-    | /* empty */ { $$ = 0.0; }
     ;
 
 EXP:
@@ -132,9 +116,11 @@ EXP:
     | FCALL
     | LOGICAL_EXP
     | BOOLEAN
-    | LIST
-    | VARIABLE_SET
     | FUNCTION_DEF
+    | DISPLAY
+    | CONTROL_STATEMENT
+    | ASSIGNMENT
+    | QUIT
     ;
 
 ARITHMETIC_EXP:
@@ -157,19 +143,12 @@ BOOLEAN:
     | KW_FALSE { $$ = 0.0; }
     ;
 
-STATEMENT:
-    ASSIGNMENT
-    | CONTROL_STATEMENT
-    | DISPLAY
-    | QUIT
-    ;
-
 ASSIGNMENT:
-    OP_OP KW_SET IDENTIFIER EXP OP_CP { add_symbol($3, $4); }
+    OP_OP KW_SET IDENTIFIER EXP OP_CP { add_symbol($3, $4); $$ = $4; }
     ;
 
 FCALL:
-    OP_OP IDENTIFIER VALUEF OP_CP {
+    OP_OP IDENTIFIER EXP OP_CP {
         function_t *f = lookup_function($2);
         if (!f) yyerror("Undefined function");
         $$ = f->body + $3; // Örnek olarak gövde ve argüman toplandı
@@ -178,26 +157,22 @@ FCALL:
 
 FUNCTION_DEF:
     OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP {
-        add_function($3, $7); // Fonksiyonu tabloya ekle
+        add_function($3, $5, $7); // Fonksiyonu tabloya ekle
     }
     ;
 
 CONTROL_STATEMENT:
-    OP_OP KW_IF LOGICAL_EXP EXPLIST OP_CP
-    | OP_OP KW_WHILE OP_OP LOGICAL_EXP OP_CP EXPLIST OP_CP
-    | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
-    ;
-
-VARIABLE_SET:
-    OP_OP KW_SET IDENTIFIER EXPLIST OP_CP { add_symbol($3, $4); }
+    OP_OP KW_IF EXP EXP OP_CP { if ($3) { $$ = $4; } }
+    | OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP { while ($4) { $$ = $6; } }
+    | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXP OP_CP { add_symbol($4, $5); while (lookup_symbol($4) < $6) { $$ = $8; add_symbol($4, lookup_symbol($4) + 1.0); } }
     ;
 
 DISPLAY:
-    OP_OP KW_DISP EXP OP_CP { printf("Display: %f\n", $3); }
+    OP_OP KW_DISP EXP OP_CP { printf("Display: %f\n", $3); $$ = 1.0;}
     ;
 
 QUIT:
-    OP_OP KW_EXIT OP_CP { exit(0); }
+    OP_OP KW_EXIT OP_CP { exit(0); $$ = 0.0; }
     ;
 
 %%
