@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Define file names
+LEX_FILE="src/gpp_lexer.l"
+YACC_FILE="src/gpp_interpreter.y"
+LEX_C_FILE="build/gpp_lexer.c"
+YACC_C_FILE="build/gpp_parser.c"
+YACC_HEADER_FILE="build/y.tab.h"
+OUTPUT_FILE="build/gpp_interpreter"
+
+# Check if Flex and Yacc files exist
+if [[ ! -f "$LEX_FILE" ]]; then
+    echo "Error: $LEX_FILE not found!"
+    exit 1
+fi
+
+if [[ ! -f "$YACC_FILE" ]]; then
+    echo "Error: $YACC_FILE not found!"
+    exit 1
+fi
+
+# Create build directory if it doesn't exist
+mkdir -p build
+
+# Generate C code from Flex file
+flex -o "$LEX_C_FILE" "$LEX_FILE"
+if [[ $? -ne 0 ]]; then
+    echo "Error: Flex failed to generate C code."
+    exit 1
+fi
+
+# Generate C code from Yacc file using Bison
+bison -d -v -o "$YACC_C_FILE" "$YACC_FILE"
+if [[ $? -ne 0 ]]; then
+    echo "Error: Bison failed to generate C code."
+    exit 1
+fi
+
+# Compile the generated C code
+gcc -o "$OUTPUT_FILE" "$LEX_C_FILE" "$YACC_C_FILE" -ll
+if [[ $? -ne 0 ]]; then
+    echo "Error: GCC failed to compile the code."
+    exit 1
+fi
+
+# Run the program
+if [[ $# -eq 0 ]]; then
+    ./"$OUTPUT_FILE"
+else
+    ./"$OUTPUT_FILE" "$1"
+fi
