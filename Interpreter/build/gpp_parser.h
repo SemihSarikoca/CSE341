@@ -47,20 +47,26 @@
      OP_DIV = 263,
      OP_OP = 264,
      OP_CP = 265,
-     KW_SET = 266,
-     KW_DEFFUN = 267,
-     KW_IF = 268,
-     KW_WHILE = 269,
-     KW_FOR = 270,
-     KW_TRUE = 271,
-     KW_FALSE = 272,
-     KW_AND = 273,
-     KW_OR = 274,
-     KW_NOT = 275,
-     KW_EQUAL = 276,
-     KW_LESS = 277,
-     KW_EXIT = 278,
-     KW_DISP = 279
+     OP_COMMA = 266,
+     KW_SET = 267,
+     KW_DEFFUN = 268,
+     KW_IF = 269,
+     KW_WHILE = 270,
+     KW_FOR = 271,
+     KW_LIST = 272,
+     KW_EXIT = 273,
+     KW_APPEND = 274,
+     KW_CONCAT = 275,
+     KW_DISP = 276,
+     KW_LOAD = 277,
+     KW_TRUE = 278,
+     KW_FALSE = 279,
+     KW_AND = 280,
+     KW_OR = 281,
+     KW_NOT = 282,
+     KW_EQUAL = 283,
+     KW_LESS = 284,
+     KW_NIL = 285
    };
 #endif
 /* Tokens.  */
@@ -72,33 +78,39 @@
 #define OP_DIV 263
 #define OP_OP 264
 #define OP_CP 265
-#define KW_SET 266
-#define KW_DEFFUN 267
-#define KW_IF 268
-#define KW_WHILE 269
-#define KW_FOR 270
-#define KW_TRUE 271
-#define KW_FALSE 272
-#define KW_AND 273
-#define KW_OR 274
-#define KW_NOT 275
-#define KW_EQUAL 276
-#define KW_LESS 277
-#define KW_EXIT 278
-#define KW_DISP 279
+#define OP_COMMA 266
+#define KW_SET 267
+#define KW_DEFFUN 268
+#define KW_IF 269
+#define KW_WHILE 270
+#define KW_FOR 271
+#define KW_LIST 272
+#define KW_EXIT 273
+#define KW_APPEND 274
+#define KW_CONCAT 275
+#define KW_DISP 276
+#define KW_LOAD 277
+#define KW_TRUE 278
+#define KW_FALSE 279
+#define KW_AND 280
+#define KW_OR 281
+#define KW_NOT 282
+#define KW_EQUAL 283
+#define KW_LESS 284
+#define KW_NIL 285
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 74 "src/gpp_interpreter.y"
+#line 48 "src/gpp_interpreter.y"
 {
     float fval;
     char *sval;
 }
 /* Line 1529 of yacc.c.  */
-#line 102 "build/gpp_parser.h"
+#line 114 "build/gpp_parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

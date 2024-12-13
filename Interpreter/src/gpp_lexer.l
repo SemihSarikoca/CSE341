@@ -19,13 +19,18 @@ COMMENT ;.*
 "not"         { return KW_NOT; }
 "equal"       { return KW_EQUAL; }
 "less"        { return KW_LESS; }
+"nil"         { return KW_NIL; }
 "set"         { return KW_SET; }
 "deffun"      { return KW_DEFFUN; }
 "for"         { return KW_FOR; }
 "if"          { return KW_IF; }
 "exit"        { return KW_EXIT; }
 "while"       { return KW_WHILE; }
-"disp"        { return KW_DISP; }
+"list"        { return KW_LIST; }
+"disp"       { return KW_DISP; }
+"append"      { return KW_APPEND; }
+"concat"      { return KW_CONCAT; }
+"load"        { return KW_LOAD; }
 
 "true"        { return KW_TRUE; }
 "false"       { return KW_FALSE; }
@@ -36,6 +41,7 @@ COMMENT ;.*
 "*"           { return OP_MULT; }
 "("           { return OP_OP; }
 ")"           { return OP_CP; }
+","           { return OP_COMMA; }
 
 {VALUEF}      { yylval.fval = atof(yytext); return VALUEF; }
 {IDENTIFIER}  { yylval.sval = strdup(yytext); return IDENTIFIER; }
