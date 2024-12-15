@@ -100,7 +100,7 @@ void print_node(Node* node, int depth);
 %token KW_TRUE KW_FALSE
 %token KW_AND KW_OR KW_NOT KW_EQUAL KW_LESS KW_NIL
 
-%type <node> EXP EXPLIST ARITHMETIC_EXP LOGICAL_EXP BOOLEAN FUNCTION_DEF FCALL
+%type <node> EXP EXPLIST ARITHMETIC_EXP LOGICAL_EXP FUNCTION_DEF FCALL
 %type <node> DISPLAY CONTROL_STATEMENT EXIT ASSIGNMENT LIST VALUES LOAD INPUT START
 
 %%
@@ -127,7 +127,8 @@ START:
     ;
 
 INPUT:
-    | EXPLIST { $$ = $1; }
+    EXPLIST { $$ = $1; }
+    | { $$ = NULL; }
     ;
 
 EXPLIST:
@@ -147,7 +148,6 @@ EXP:
         $$ = create_node(NODE_VALUE, NULL, $1);
     }
     | ARITHMETIC_EXP { $$ = $1; }
-    | BOOLEAN { $$ = $1; }
     | LOGICAL_EXP { $$ = $1; }
     | FCALL { $$ = $1; }
     | FUNCTION_DEF { $$ = $1; }
@@ -183,7 +183,9 @@ ARITHMETIC_EXP:
     ;
 
 LOGICAL_EXP:
-    OP_OP KW_AND EXP EXP OP_CP {
+    KW_TRUE { $$ = create_node(NODE_VALUE, "TRUE", 1.0); }
+    | KW_FALSE { $$ = create_node(NODE_VALUE, "FALSE", 0.0); }
+    | OP_OP KW_AND EXP EXP OP_CP {
         $$ = create_node(NODE_OPERATOR, "AND", get_node_value($3) && get_node_value($4));
         $$->left = $3;
         $$->right = $4;
@@ -207,11 +209,6 @@ LOGICAL_EXP:
         $$->left = $3;
         $$->right = $4;
     }
-    ;
-
-BOOLEAN:
-    KW_TRUE { $$ = create_node(NODE_VALUE, "TRUE", 1.0); }
-    | KW_FALSE { $$ = create_node(NODE_VALUE, "FALSE", 0.0); }
     ;
 
 ASSIGNMENT:

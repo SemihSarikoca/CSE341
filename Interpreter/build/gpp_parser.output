@@ -4,8 +4,8 @@ Grammar
 
     1 START: INPUT
 
-    2 INPUT: /* empty */
-    3      | EXPLIST
+    2 INPUT: EXPLIST
+    3      | /* empty */
 
     4 EXPLIST: EXPLIST EXP
     5        | EXP
@@ -13,92 +13,90 @@ Grammar
     6 EXP: IDENTIFIER
     7    | VALUEF
     8    | ARITHMETIC_EXP
-    9    | BOOLEAN
-   10    | LOGICAL_EXP
-   11    | FCALL
-   12    | FUNCTION_DEF
-   13    | LIST
-   14    | ASSIGNMENT
-   15    | CONTROL_STATEMENT
-   16    | DISPLAY
-   17    | EXIT
-   18    | LOAD
+    9    | LOGICAL_EXP
+   10    | FCALL
+   11    | FUNCTION_DEF
+   12    | LIST
+   13    | ASSIGNMENT
+   14    | CONTROL_STATEMENT
+   15    | DISPLAY
+   16    | EXIT
+   17    | LOAD
 
-   19 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP OP_CP
-   20               | OP_OP OP_MINUS EXP EXP OP_CP
-   21               | OP_OP OP_MULT EXP EXP OP_CP
-   22               | OP_OP OP_DIV EXP EXP OP_CP
+   18 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP OP_CP
+   19               | OP_OP OP_MINUS EXP EXP OP_CP
+   20               | OP_OP OP_MULT EXP EXP OP_CP
+   21               | OP_OP OP_DIV EXP EXP OP_CP
 
-   23 LOGICAL_EXP: OP_OP KW_AND EXP EXP OP_CP
-   24            | OP_OP KW_OR EXP EXP OP_CP
-   25            | OP_OP KW_NOT EXP OP_CP
-   26            | OP_OP KW_EQUAL EXP EXP OP_CP
-   27            | OP_OP KW_LESS EXP EXP OP_CP
+   22 LOGICAL_EXP: KW_TRUE
+   23            | KW_FALSE
+   24            | OP_OP KW_AND EXP EXP OP_CP
+   25            | OP_OP KW_OR EXP EXP OP_CP
+   26            | OP_OP KW_NOT EXP OP_CP
+   27            | OP_OP KW_EQUAL EXP EXP OP_CP
+   28            | OP_OP KW_LESS EXP EXP OP_CP
 
-   28 BOOLEAN: KW_TRUE
-   29        | KW_FALSE
+   29 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP OP_CP
 
-   30 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP OP_CP
+   30 FCALL: OP_OP IDENTIFIER EXP OP_CP
 
-   31 FCALL: OP_OP IDENTIFIER EXP OP_CP
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
+   32 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP OP_CP
+   33                  | OP_OP KW_IF EXP EXP EXP OP_CP
+   34                  | OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP
+   35                  | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
 
-   33 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP OP_CP
-   34                  | OP_OP KW_IF EXP EXP EXP OP_CP
-   35                  | OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP
-   36                  | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
+   36 DISPLAY: OP_OP KW_DISP EXPLIST OP_CP
 
-   37 DISPLAY: OP_OP KW_DISP EXPLIST OP_CP
+   37 EXIT: OP_OP KW_EXIT OP_CP
 
-   38 EXIT: OP_OP KW_EXIT OP_CP
+   38 LIST: KW_NIL
+   39     | OP_OP KW_LIST OP_CP
+   40     | OP_OP KW_LIST OP_OP VALUES OP_CP OP_CP
+   41     | OP_OP KW_APPEND LIST EXP OP_CP
+   42     | OP_OP KW_CONCAT LIST LIST OP_CP
 
-   39 LIST: KW_NIL
-   40     | OP_OP KW_LIST OP_CP
-   41     | OP_OP KW_LIST OP_OP VALUES OP_CP OP_CP
-   42     | OP_OP KW_APPEND LIST EXP OP_CP
-   43     | OP_OP KW_CONCAT LIST LIST OP_CP
+   43 VALUES: VALUES OP_COMMA VALUEF
+   44       | VALUEF
 
-   44 VALUES: VALUES OP_COMMA VALUEF
-   45       | VALUEF
-
-   46 LOAD: OP_OP KW_LOAD IDENTIFIER OP_CP
+   45 LOAD: OP_OP KW_LOAD IDENTIFIER OP_CP
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-VALUEF (258) 7 44 45
-IDENTIFIER (259) 6 30 31 32 36 46
-OP_PLUS (260) 19
-OP_MINUS (261) 20
-OP_MULT (262) 21
-OP_DIV (263) 22
-OP_OP (264) 19 20 21 22 23 24 25 26 27 30 31 32 33 34 35 36 37 38 40
-    41 42 43 46
-OP_CP (265) 19 20 21 22 23 24 25 26 27 30 31 32 33 34 35 36 37 38 40
-    41 42 43 46
-OP_COMMA (266) 44
-KW_SET (267) 30
-KW_DEFFUN (268) 32
-KW_IF (269) 33 34
-KW_WHILE (270) 35
-KW_FOR (271) 36
-KW_LIST (272) 40 41
-KW_EXIT (273) 38
-KW_APPEND (274) 42
-KW_CONCAT (275) 43
-KW_DISP (276) 37
-KW_LOAD (277) 46
-KW_TRUE (278) 28
-KW_FALSE (279) 29
-KW_AND (280) 23
-KW_OR (281) 24
-KW_NOT (282) 25
-KW_EQUAL (283) 26
-KW_LESS (284) 27
-KW_NIL (285) 39
+VALUEF (258) 7 43 44
+IDENTIFIER (259) 6 29 30 31 35 45
+OP_PLUS (260) 18
+OP_MINUS (261) 19
+OP_MULT (262) 20
+OP_DIV (263) 21
+OP_OP (264) 18 19 20 21 24 25 26 27 28 29 30 31 32 33 34 35 36 37 39
+    40 41 42 45
+OP_CP (265) 18 19 20 21 24 25 26 27 28 29 30 31 32 33 34 35 36 37 39
+    40 41 42 45
+OP_COMMA (266) 43
+KW_SET (267) 29
+KW_DEFFUN (268) 31
+KW_IF (269) 32 33
+KW_WHILE (270) 34
+KW_FOR (271) 35
+KW_LIST (272) 39 40
+KW_EXIT (273) 37
+KW_APPEND (274) 41
+KW_CONCAT (275) 42
+KW_DISP (276) 36
+KW_LOAD (277) 45
+KW_TRUE (278) 22
+KW_FALSE (279) 23
+KW_AND (280) 24
+KW_OR (281) 25
+KW_NOT (282) 26
+KW_EQUAL (283) 27
+KW_LESS (284) 28
+KW_NIL (285) 38
 
 
 Nonterminals, with rules where they appear
@@ -110,34 +108,32 @@ START (32)
 INPUT (33)
     on left: 2 3, on right: 1
 EXPLIST (34)
-    on left: 4 5, on right: 3 4 36 37
+    on left: 4 5, on right: 2 4 35 36
 EXP (35)
-    on left: 6 7 8 9 10 11 12 13 14 15 16 17 18, on right: 4 5 19 20
-    21 22 23 24 25 26 27 30 31 32 33 34 35 36 42
+    on left: 6 7 8 9 10 11 12 13 14 15 16 17, on right: 4 5 18 19 20
+    21 24 25 26 27 28 29 30 31 32 33 34 35 41
 ARITHMETIC_EXP (36)
-    on left: 19 20 21 22, on right: 8
+    on left: 18 19 20 21, on right: 8
 LOGICAL_EXP (37)
-    on left: 23 24 25 26 27, on right: 10
-BOOLEAN (38)
-    on left: 28 29, on right: 9
-ASSIGNMENT (39)
-    on left: 30, on right: 14
-FCALL (40)
+    on left: 22 23 24 25 26 27 28, on right: 9
+ASSIGNMENT (38)
+    on left: 29, on right: 13
+FCALL (39)
+    on left: 30, on right: 10
+FUNCTION_DEF (40)
     on left: 31, on right: 11
-FUNCTION_DEF (41)
-    on left: 32, on right: 12
-CONTROL_STATEMENT (42)
-    on left: 33 34 35 36, on right: 15
-DISPLAY (43)
+CONTROL_STATEMENT (41)
+    on left: 32 33 34 35, on right: 14
+DISPLAY (42)
+    on left: 36, on right: 15
+EXIT (43)
     on left: 37, on right: 16
-EXIT (44)
-    on left: 38, on right: 17
-LIST (45)
-    on left: 39 40 41 42 43, on right: 13 42 43
-VALUES (46)
-    on left: 44 45, on right: 41 44
-LOAD (47)
-    on left: 46, on right: 18
+LIST (44)
+    on left: 38 39 40 41 42, on right: 12 41 42
+VALUES (45)
+    on left: 43 44, on right: 40 43
+LOAD (46)
+    on left: 45, on right: 17
 
 
 state 0
@@ -151,7 +147,7 @@ state 0
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    $default  reduce using rule 2 (INPUT)
+    $default  reduce using rule 3 (INPUT)
 
     START              go to state 7
     INPUT              go to state 8
@@ -159,15 +155,14 @@ state 0
     EXP                go to state 10
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 1
@@ -186,79 +181,79 @@ state 2
 
 state 3
 
-   19 ARITHMETIC_EXP: OP_OP . OP_PLUS EXP EXP OP_CP
-   20               | OP_OP . OP_MINUS EXP EXP OP_CP
-   21               | OP_OP . OP_MULT EXP EXP OP_CP
-   22               | OP_OP . OP_DIV EXP EXP OP_CP
-   23 LOGICAL_EXP: OP_OP . KW_AND EXP EXP OP_CP
-   24            | OP_OP . KW_OR EXP EXP OP_CP
-   25            | OP_OP . KW_NOT EXP OP_CP
-   26            | OP_OP . KW_EQUAL EXP EXP OP_CP
-   27            | OP_OP . KW_LESS EXP EXP OP_CP
-   30 ASSIGNMENT: OP_OP . KW_SET IDENTIFIER EXP OP_CP
-   31 FCALL: OP_OP . IDENTIFIER EXP OP_CP
-   32 FUNCTION_DEF: OP_OP . KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
-   33 CONTROL_STATEMENT: OP_OP . KW_IF EXP EXP OP_CP
-   34                  | OP_OP . KW_IF EXP EXP EXP OP_CP
-   35                  | OP_OP . KW_WHILE OP_OP EXP OP_CP EXP OP_CP
-   36                  | OP_OP . KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
-   37 DISPLAY: OP_OP . KW_DISP EXPLIST OP_CP
-   38 EXIT: OP_OP . KW_EXIT OP_CP
-   40 LIST: OP_OP . KW_LIST OP_CP
-   41     | OP_OP . KW_LIST OP_OP VALUES OP_CP OP_CP
-   42     | OP_OP . KW_APPEND LIST EXP OP_CP
-   43     | OP_OP . KW_CONCAT LIST LIST OP_CP
-   46 LOAD: OP_OP . KW_LOAD IDENTIFIER OP_CP
+   18 ARITHMETIC_EXP: OP_OP . OP_PLUS EXP EXP OP_CP
+   19               | OP_OP . OP_MINUS EXP EXP OP_CP
+   20               | OP_OP . OP_MULT EXP EXP OP_CP
+   21               | OP_OP . OP_DIV EXP EXP OP_CP
+   24 LOGICAL_EXP: OP_OP . KW_AND EXP EXP OP_CP
+   25            | OP_OP . KW_OR EXP EXP OP_CP
+   26            | OP_OP . KW_NOT EXP OP_CP
+   27            | OP_OP . KW_EQUAL EXP EXP OP_CP
+   28            | OP_OP . KW_LESS EXP EXP OP_CP
+   29 ASSIGNMENT: OP_OP . KW_SET IDENTIFIER EXP OP_CP
+   30 FCALL: OP_OP . IDENTIFIER EXP OP_CP
+   31 FUNCTION_DEF: OP_OP . KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
+   32 CONTROL_STATEMENT: OP_OP . KW_IF EXP EXP OP_CP
+   33                  | OP_OP . KW_IF EXP EXP EXP OP_CP
+   34                  | OP_OP . KW_WHILE OP_OP EXP OP_CP EXP OP_CP
+   35                  | OP_OP . KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
+   36 DISPLAY: OP_OP . KW_DISP EXPLIST OP_CP
+   37 EXIT: OP_OP . KW_EXIT OP_CP
+   39 LIST: OP_OP . KW_LIST OP_CP
+   40     | OP_OP . KW_LIST OP_OP VALUES OP_CP OP_CP
+   41     | OP_OP . KW_APPEND LIST EXP OP_CP
+   42     | OP_OP . KW_CONCAT LIST LIST OP_CP
+   45 LOAD: OP_OP . KW_LOAD IDENTIFIER OP_CP
 
-    IDENTIFIER  shift, and go to state 22
-    OP_PLUS     shift, and go to state 23
-    OP_MINUS    shift, and go to state 24
-    OP_MULT     shift, and go to state 25
-    OP_DIV      shift, and go to state 26
-    KW_SET      shift, and go to state 27
-    KW_DEFFUN   shift, and go to state 28
-    KW_IF       shift, and go to state 29
-    KW_WHILE    shift, and go to state 30
-    KW_FOR      shift, and go to state 31
-    KW_LIST     shift, and go to state 32
-    KW_EXIT     shift, and go to state 33
-    KW_APPEND   shift, and go to state 34
-    KW_CONCAT   shift, and go to state 35
-    KW_DISP     shift, and go to state 36
-    KW_LOAD     shift, and go to state 37
-    KW_AND      shift, and go to state 38
-    KW_OR       shift, and go to state 39
-    KW_NOT      shift, and go to state 40
-    KW_EQUAL    shift, and go to state 41
-    KW_LESS     shift, and go to state 42
+    IDENTIFIER  shift, and go to state 21
+    OP_PLUS     shift, and go to state 22
+    OP_MINUS    shift, and go to state 23
+    OP_MULT     shift, and go to state 24
+    OP_DIV      shift, and go to state 25
+    KW_SET      shift, and go to state 26
+    KW_DEFFUN   shift, and go to state 27
+    KW_IF       shift, and go to state 28
+    KW_WHILE    shift, and go to state 29
+    KW_FOR      shift, and go to state 30
+    KW_LIST     shift, and go to state 31
+    KW_EXIT     shift, and go to state 32
+    KW_APPEND   shift, and go to state 33
+    KW_CONCAT   shift, and go to state 34
+    KW_DISP     shift, and go to state 35
+    KW_LOAD     shift, and go to state 36
+    KW_AND      shift, and go to state 37
+    KW_OR       shift, and go to state 38
+    KW_NOT      shift, and go to state 39
+    KW_EQUAL    shift, and go to state 40
+    KW_LESS     shift, and go to state 41
 
 
 state 4
 
-   28 BOOLEAN: KW_TRUE .
+   22 LOGICAL_EXP: KW_TRUE .
 
-    $default  reduce using rule 28 (BOOLEAN)
+    $default  reduce using rule 22 (LOGICAL_EXP)
 
 
 state 5
 
-   29 BOOLEAN: KW_FALSE .
+   23 LOGICAL_EXP: KW_FALSE .
 
-    $default  reduce using rule 29 (BOOLEAN)
+    $default  reduce using rule 23 (LOGICAL_EXP)
 
 
 state 6
 
-   39 LIST: KW_NIL .
+   38 LIST: KW_NIL .
 
-    $default  reduce using rule 39 (LIST)
+    $default  reduce using rule 38 (LIST)
 
 
 state 7
 
     0 $accept: START . $end
 
-    $end  shift, and go to state 43
+    $end  shift, and go to state 42
 
 
 state 8
@@ -270,7 +265,7 @@ state 8
 
 state 9
 
-    3 INPUT: EXPLIST .
+    2 INPUT: EXPLIST .
     4 EXPLIST: EXPLIST . EXP
 
     VALUEF      shift, and go to state 1
@@ -280,20 +275,19 @@ state 9
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    $default  reduce using rule 3 (INPUT)
+    $default  reduce using rule 2 (INPUT)
 
-    EXP                go to state 44
+    EXP                go to state 43
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 10
@@ -312,77 +306,94 @@ state 11
 
 state 12
 
-   10 EXP: LOGICAL_EXP .
-
-    $default  reduce using rule 10 (EXP)
-
-
-state 13
-
-    9 EXP: BOOLEAN .
+    9 EXP: LOGICAL_EXP .
 
     $default  reduce using rule 9 (EXP)
 
 
+state 13
+
+   13 EXP: ASSIGNMENT .
+
+    $default  reduce using rule 13 (EXP)
+
+
 state 14
 
-   14 EXP: ASSIGNMENT .
+   10 EXP: FCALL .
 
-    $default  reduce using rule 14 (EXP)
+    $default  reduce using rule 10 (EXP)
 
 
 state 15
 
-   11 EXP: FCALL .
+   11 EXP: FUNCTION_DEF .
 
     $default  reduce using rule 11 (EXP)
 
 
 state 16
 
-   12 EXP: FUNCTION_DEF .
+   14 EXP: CONTROL_STATEMENT .
 
-    $default  reduce using rule 12 (EXP)
+    $default  reduce using rule 14 (EXP)
 
 
 state 17
 
-   15 EXP: CONTROL_STATEMENT .
+   15 EXP: DISPLAY .
 
     $default  reduce using rule 15 (EXP)
 
 
 state 18
 
-   16 EXP: DISPLAY .
+   16 EXP: EXIT .
 
     $default  reduce using rule 16 (EXP)
 
 
 state 19
 
-   17 EXP: EXIT .
+   12 EXP: LIST .
 
-    $default  reduce using rule 17 (EXP)
+    $default  reduce using rule 12 (EXP)
 
 
 state 20
 
-   13 EXP: LIST .
+   17 EXP: LOAD .
 
-    $default  reduce using rule 13 (EXP)
+    $default  reduce using rule 17 (EXP)
 
 
 state 21
 
-   18 EXP: LOAD .
+   30 FCALL: OP_OP IDENTIFIER . EXP OP_CP
 
-    $default  reduce using rule 18 (EXP)
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 44
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 22
 
-   31 FCALL: OP_OP IDENTIFIER . EXP OP_CP
+   18 ARITHMETIC_EXP: OP_OP OP_PLUS . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -394,20 +405,19 @@ state 22
     EXP                go to state 45
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 23
 
-   19 ARITHMETIC_EXP: OP_OP OP_PLUS . EXP EXP OP_CP
+   19 ARITHMETIC_EXP: OP_OP OP_MINUS . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -419,20 +429,19 @@ state 23
     EXP                go to state 46
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 24
 
-   20 ARITHMETIC_EXP: OP_OP OP_MINUS . EXP EXP OP_CP
+   20 ARITHMETIC_EXP: OP_OP OP_MULT . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -444,20 +453,19 @@ state 24
     EXP                go to state 47
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 25
 
-   21 ARITHMETIC_EXP: OP_OP OP_MULT . EXP EXP OP_CP
+   21 ARITHMETIC_EXP: OP_OP OP_DIV . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -469,60 +477,34 @@ state 25
     EXP                go to state 48
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 26
 
-   22 ARITHMETIC_EXP: OP_OP OP_DIV . EXP EXP OP_CP
+   29 ASSIGNMENT: OP_OP KW_SET . IDENTIFIER EXP OP_CP
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXP                go to state 49
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    IDENTIFIER  shift, and go to state 49
 
 
 state 27
 
-   30 ASSIGNMENT: OP_OP KW_SET . IDENTIFIER EXP OP_CP
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN . IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
 
     IDENTIFIER  shift, and go to state 50
 
 
 state 28
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN . IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP
-
-    IDENTIFIER  shift, and go to state 51
-
-
-state 29
-
-   33 CONTROL_STATEMENT: OP_OP KW_IF . EXP EXP OP_CP
-   34                  | OP_OP KW_IF . EXP EXP EXP OP_CP
+   32 CONTROL_STATEMENT: OP_OP KW_IF . EXP EXP OP_CP
+   33                  | OP_OP KW_IF . EXP EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -531,55 +513,64 @@ state 29
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 52
+    EXP                go to state 51
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
+
+
+state 29
+
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE . OP_OP EXP OP_CP EXP OP_CP
+
+    OP_OP  shift, and go to state 52
 
 
 state 30
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE . OP_OP EXP OP_CP EXP OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR . OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
 
     OP_OP  shift, and go to state 53
 
 
 state 31
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR . OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
+   39 LIST: OP_OP KW_LIST . OP_CP
+   40     | OP_OP KW_LIST . OP_OP VALUES OP_CP OP_CP
 
     OP_OP  shift, and go to state 54
+    OP_CP  shift, and go to state 55
 
 
 state 32
 
-   40 LIST: OP_OP KW_LIST . OP_CP
-   41     | OP_OP KW_LIST . OP_OP VALUES OP_CP OP_CP
+   37 EXIT: OP_OP KW_EXIT . OP_CP
 
-    OP_OP  shift, and go to state 55
     OP_CP  shift, and go to state 56
 
 
 state 33
 
-   38 EXIT: OP_OP KW_EXIT . OP_CP
+   41 LIST: OP_OP KW_APPEND . LIST EXP OP_CP
 
-    OP_CP  shift, and go to state 57
+    OP_OP   shift, and go to state 57
+    KW_NIL  shift, and go to state 6
+
+    LIST  go to state 58
 
 
 state 34
 
-   42 LIST: OP_OP KW_APPEND . LIST EXP OP_CP
+   42 LIST: OP_OP KW_CONCAT . LIST LIST OP_CP
 
-    OP_OP   shift, and go to state 58
+    OP_OP   shift, and go to state 57
     KW_NIL  shift, and go to state 6
 
     LIST  go to state 59
@@ -587,17 +578,7 @@ state 34
 
 state 35
 
-   43 LIST: OP_OP KW_CONCAT . LIST LIST OP_CP
-
-    OP_OP   shift, and go to state 58
-    KW_NIL  shift, and go to state 6
-
-    LIST  go to state 60
-
-
-state 36
-
-   37 DISPLAY: OP_OP KW_DISP . EXPLIST OP_CP
+   36 DISPLAY: OP_OP KW_DISP . EXPLIST OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -606,31 +587,54 @@ state 36
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXPLIST            go to state 61
+    EXPLIST            go to state 60
     EXP                go to state 10
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
+
+
+state 36
+
+   45 LOAD: OP_OP KW_LOAD . IDENTIFIER OP_CP
+
+    IDENTIFIER  shift, and go to state 61
 
 
 state 37
 
-   46 LOAD: OP_OP KW_LOAD . IDENTIFIER OP_CP
+   24 LOGICAL_EXP: OP_OP KW_AND . EXP EXP OP_CP
 
-    IDENTIFIER  shift, and go to state 62
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 62
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 38
 
-   23 LOGICAL_EXP: OP_OP KW_AND . EXP EXP OP_CP
+   25 LOGICAL_EXP: OP_OP KW_OR . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -642,20 +646,19 @@ state 38
     EXP                go to state 63
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 39
 
-   24 LOGICAL_EXP: OP_OP KW_OR . EXP EXP OP_CP
+   26 LOGICAL_EXP: OP_OP KW_NOT . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -667,20 +670,19 @@ state 39
     EXP                go to state 64
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 40
 
-   25 LOGICAL_EXP: OP_OP KW_NOT . EXP OP_CP
+   27 LOGICAL_EXP: OP_OP KW_EQUAL . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -692,20 +694,19 @@ state 40
     EXP                go to state 65
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 41
 
-   26 LOGICAL_EXP: OP_OP KW_EQUAL . EXP EXP OP_CP
+   28 LOGICAL_EXP: OP_OP KW_LESS . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -717,20 +718,40 @@ state 41
     EXP                go to state 66
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 42
 
-   27 LOGICAL_EXP: OP_OP KW_LESS . EXP EXP OP_CP
+    0 $accept: START $end .
+
+    $default  accept
+
+
+state 43
+
+    4 EXPLIST: EXPLIST EXP .
+
+    $default  reduce using rule 4 (EXPLIST)
+
+
+state 44
+
+   30 FCALL: OP_OP IDENTIFIER EXP . OP_CP
+
+    OP_CP  shift, and go to state 67
+
+
+state 45
+
+   18 ARITHMETIC_EXP: OP_OP OP_PLUS EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -739,44 +760,22 @@ state 42
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 67
+    EXP                go to state 68
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
-
-
-state 43
-
-    0 $accept: START $end .
-
-    $default  accept
-
-
-state 44
-
-    4 EXPLIST: EXPLIST EXP .
-
-    $default  reduce using rule 4 (EXPLIST)
-
-
-state 45
-
-   31 FCALL: OP_OP IDENTIFIER EXP . OP_CP
-
-    OP_CP  shift, and go to state 68
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 46
 
-   19 ARITHMETIC_EXP: OP_OP OP_PLUS EXP . EXP OP_CP
+   19 ARITHMETIC_EXP: OP_OP OP_MINUS EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -788,20 +787,19 @@ state 46
     EXP                go to state 69
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 47
 
-   20 ARITHMETIC_EXP: OP_OP OP_MINUS EXP . EXP OP_CP
+   20 ARITHMETIC_EXP: OP_OP OP_MULT EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -813,20 +811,19 @@ state 47
     EXP                go to state 70
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 48
 
-   21 ARITHMETIC_EXP: OP_OP OP_MULT EXP . EXP OP_CP
+   21 ARITHMETIC_EXP: OP_OP OP_DIV EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -838,20 +835,19 @@ state 48
     EXP                go to state 71
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 49
 
-   22 ARITHMETIC_EXP: OP_OP OP_DIV EXP . EXP OP_CP
+   29 ASSIGNMENT: OP_OP KW_SET IDENTIFIER . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -863,20 +859,27 @@ state 49
     EXP                go to state 72
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 50
 
-   30 ASSIGNMENT: OP_OP KW_SET IDENTIFIER . EXP OP_CP
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER . OP_OP IDENTIFIER OP_CP EXP OP_CP
+
+    OP_OP  shift, and go to state 73
+
+
+state 51
+
+   32 CONTROL_STATEMENT: OP_OP KW_IF EXP . EXP OP_CP
+   33                  | OP_OP KW_IF EXP . EXP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -885,31 +888,22 @@ state 50
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 73
+    EXP                go to state 74
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
-
-
-state 51
-
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER . OP_OP IDENTIFIER OP_CP EXP OP_CP
-
-    OP_OP  shift, and go to state 74
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 52
 
-   33 CONTROL_STATEMENT: OP_OP KW_IF EXP . EXP OP_CP
-   34                  | OP_OP KW_IF EXP . EXP EXP OP_CP
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP . EXP OP_CP EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -921,156 +915,152 @@ state 52
     EXP                go to state 75
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 53
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP . EXP OP_CP EXP OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP . IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXP                go to state 76
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    IDENTIFIER  shift, and go to state 76
 
 
 state 54
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP . IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP
+   40 LIST: OP_OP KW_LIST OP_OP . VALUES OP_CP OP_CP
 
-    IDENTIFIER  shift, and go to state 77
+    VALUEF  shift, and go to state 77
+
+    VALUES  go to state 78
 
 
 state 55
 
-   41 LIST: OP_OP KW_LIST OP_OP . VALUES OP_CP OP_CP
+   39 LIST: OP_OP KW_LIST OP_CP .
 
-    VALUEF  shift, and go to state 78
-
-    VALUES  go to state 79
+    $default  reduce using rule 39 (LIST)
 
 
 state 56
 
-   40 LIST: OP_OP KW_LIST OP_CP .
+   37 EXIT: OP_OP KW_EXIT OP_CP .
 
-    $default  reduce using rule 40 (LIST)
+    $default  reduce using rule 37 (EXIT)
 
 
 state 57
 
-   38 EXIT: OP_OP KW_EXIT OP_CP .
+   39 LIST: OP_OP . KW_LIST OP_CP
+   40     | OP_OP . KW_LIST OP_OP VALUES OP_CP OP_CP
+   41     | OP_OP . KW_APPEND LIST EXP OP_CP
+   42     | OP_OP . KW_CONCAT LIST LIST OP_CP
 
-    $default  reduce using rule 38 (EXIT)
+    KW_LIST    shift, and go to state 31
+    KW_APPEND  shift, and go to state 33
+    KW_CONCAT  shift, and go to state 34
 
 
 state 58
 
-   40 LIST: OP_OP . KW_LIST OP_CP
-   41     | OP_OP . KW_LIST OP_OP VALUES OP_CP OP_CP
-   42     | OP_OP . KW_APPEND LIST EXP OP_CP
-   43     | OP_OP . KW_CONCAT LIST LIST OP_CP
+   41 LIST: OP_OP KW_APPEND LIST . EXP OP_CP
 
-    KW_LIST    shift, and go to state 32
-    KW_APPEND  shift, and go to state 34
-    KW_CONCAT  shift, and go to state 35
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 79
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 59
 
-   42 LIST: OP_OP KW_APPEND LIST . EXP OP_CP
+   42 LIST: OP_OP KW_CONCAT LIST . LIST OP_CP
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
+    OP_OP   shift, and go to state 57
+    KW_NIL  shift, and go to state 6
 
-    EXP                go to state 80
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    LIST  go to state 80
 
 
 state 60
 
-   43 LIST: OP_OP KW_CONCAT LIST . LIST OP_CP
-
-    OP_OP   shift, and go to state 58
-    KW_NIL  shift, and go to state 6
-
-    LIST  go to state 81
-
-
-state 61
-
     4 EXPLIST: EXPLIST . EXP
-   37 DISPLAY: OP_OP KW_DISP EXPLIST . OP_CP
+   36 DISPLAY: OP_OP KW_DISP EXPLIST . OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     OP_OP       shift, and go to state 3
-    OP_CP       shift, and go to state 82
+    OP_CP       shift, and go to state 81
     KW_TRUE     shift, and go to state 4
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 44
+    EXP                go to state 43
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
+
+
+state 61
+
+   45 LOAD: OP_OP KW_LOAD IDENTIFIER . OP_CP
+
+    OP_CP  shift, and go to state 82
 
 
 state 62
 
-   46 LOAD: OP_OP KW_LOAD IDENTIFIER . OP_CP
+   24 LOGICAL_EXP: OP_OP KW_AND EXP . EXP OP_CP
 
-    OP_CP  shift, and go to state 83
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 83
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 63
 
-   23 LOGICAL_EXP: OP_OP KW_AND EXP . EXP OP_CP
+   25 LOGICAL_EXP: OP_OP KW_OR EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1082,20 +1072,26 @@ state 63
     EXP                go to state 84
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 64
 
-   24 LOGICAL_EXP: OP_OP KW_OR EXP . EXP OP_CP
+   26 LOGICAL_EXP: OP_OP KW_NOT EXP . OP_CP
+
+    OP_CP  shift, and go to state 85
+
+
+state 65
+
+   27 LOGICAL_EXP: OP_OP KW_EQUAL EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1104,30 +1100,22 @@ state 64
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 85
+    EXP                go to state 86
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
-
-
-state 65
-
-   25 LOGICAL_EXP: OP_OP KW_NOT EXP . OP_CP
-
-    OP_CP  shift, and go to state 86
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 66
 
-   26 LOGICAL_EXP: OP_OP KW_EQUAL EXP . EXP OP_CP
+   28 LOGICAL_EXP: OP_OP KW_LESS EXP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1139,128 +1127,101 @@ state 66
     EXP                go to state 87
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 67
 
-   27 LOGICAL_EXP: OP_OP KW_LESS EXP . EXP OP_CP
+   30 FCALL: OP_OP IDENTIFIER EXP OP_CP .
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXP                go to state 88
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    $default  reduce using rule 30 (FCALL)
 
 
 state 68
 
-   31 FCALL: OP_OP IDENTIFIER EXP OP_CP .
+   18 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP . OP_CP
 
-    $default  reduce using rule 31 (FCALL)
+    OP_CP  shift, and go to state 88
 
 
 state 69
 
-   19 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP . OP_CP
+   19 ARITHMETIC_EXP: OP_OP OP_MINUS EXP EXP . OP_CP
 
     OP_CP  shift, and go to state 89
 
 
 state 70
 
-   20 ARITHMETIC_EXP: OP_OP OP_MINUS EXP EXP . OP_CP
+   20 ARITHMETIC_EXP: OP_OP OP_MULT EXP EXP . OP_CP
 
     OP_CP  shift, and go to state 90
 
 
 state 71
 
-   21 ARITHMETIC_EXP: OP_OP OP_MULT EXP EXP . OP_CP
+   21 ARITHMETIC_EXP: OP_OP OP_DIV EXP EXP . OP_CP
 
     OP_CP  shift, and go to state 91
 
 
 state 72
 
-   22 ARITHMETIC_EXP: OP_OP OP_DIV EXP EXP . OP_CP
+   29 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP . OP_CP
 
     OP_CP  shift, and go to state 92
 
 
 state 73
 
-   30 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP . OP_CP
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP . IDENTIFIER OP_CP EXP OP_CP
 
-    OP_CP  shift, and go to state 93
+    IDENTIFIER  shift, and go to state 93
 
 
 state 74
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP . IDENTIFIER OP_CP EXP OP_CP
+   32 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP . OP_CP
+   33                  | OP_OP KW_IF EXP EXP . EXP OP_CP
 
-    IDENTIFIER  shift, and go to state 94
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    OP_CP       shift, and go to state 94
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 95
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 75
 
-   33 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP . OP_CP
-   34                  | OP_OP KW_IF EXP EXP . EXP OP_CP
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP . OP_CP EXP OP_CP
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    OP_CP       shift, and go to state 95
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXP                go to state 96
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    OP_CP  shift, and go to state 96
 
 
 state 76
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP . OP_CP EXP OP_CP
-
-    OP_CP  shift, and go to state 97
-
-
-state 77
-
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER . EXP EXP OP_CP EXPLIST OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER . EXP EXP OP_CP EXPLIST OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1269,158 +1230,181 @@ state 77
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 98
+    EXP                go to state 97
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
+
+
+state 77
+
+   44 VALUES: VALUEF .
+
+    $default  reduce using rule 44 (VALUES)
 
 
 state 78
 
-   45 VALUES: VALUEF .
+   40 LIST: OP_OP KW_LIST OP_OP VALUES . OP_CP OP_CP
+   43 VALUES: VALUES . OP_COMMA VALUEF
 
-    $default  reduce using rule 45 (VALUES)
+    OP_CP     shift, and go to state 98
+    OP_COMMA  shift, and go to state 99
 
 
 state 79
 
-   41 LIST: OP_OP KW_LIST OP_OP VALUES . OP_CP OP_CP
-   44 VALUES: VALUES . OP_COMMA VALUEF
+   41 LIST: OP_OP KW_APPEND LIST EXP . OP_CP
 
-    OP_CP     shift, and go to state 99
-    OP_COMMA  shift, and go to state 100
+    OP_CP  shift, and go to state 100
 
 
 state 80
 
-   42 LIST: OP_OP KW_APPEND LIST EXP . OP_CP
+   42 LIST: OP_OP KW_CONCAT LIST LIST . OP_CP
 
     OP_CP  shift, and go to state 101
 
 
 state 81
 
-   43 LIST: OP_OP KW_CONCAT LIST LIST . OP_CP
+   36 DISPLAY: OP_OP KW_DISP EXPLIST OP_CP .
 
-    OP_CP  shift, and go to state 102
+    $default  reduce using rule 36 (DISPLAY)
 
 
 state 82
 
-   37 DISPLAY: OP_OP KW_DISP EXPLIST OP_CP .
+   45 LOAD: OP_OP KW_LOAD IDENTIFIER OP_CP .
 
-    $default  reduce using rule 37 (DISPLAY)
+    $default  reduce using rule 45 (LOAD)
 
 
 state 83
 
-   46 LOAD: OP_OP KW_LOAD IDENTIFIER OP_CP .
+   24 LOGICAL_EXP: OP_OP KW_AND EXP EXP . OP_CP
 
-    $default  reduce using rule 46 (LOAD)
+    OP_CP  shift, and go to state 102
 
 
 state 84
 
-   23 LOGICAL_EXP: OP_OP KW_AND EXP EXP . OP_CP
+   25 LOGICAL_EXP: OP_OP KW_OR EXP EXP . OP_CP
 
     OP_CP  shift, and go to state 103
 
 
 state 85
 
-   24 LOGICAL_EXP: OP_OP KW_OR EXP EXP . OP_CP
+   26 LOGICAL_EXP: OP_OP KW_NOT EXP OP_CP .
 
-    OP_CP  shift, and go to state 104
+    $default  reduce using rule 26 (LOGICAL_EXP)
 
 
 state 86
 
-   25 LOGICAL_EXP: OP_OP KW_NOT EXP OP_CP .
+   27 LOGICAL_EXP: OP_OP KW_EQUAL EXP EXP . OP_CP
 
-    $default  reduce using rule 25 (LOGICAL_EXP)
+    OP_CP  shift, and go to state 104
 
 
 state 87
 
-   26 LOGICAL_EXP: OP_OP KW_EQUAL EXP EXP . OP_CP
+   28 LOGICAL_EXP: OP_OP KW_LESS EXP EXP . OP_CP
 
     OP_CP  shift, and go to state 105
 
 
 state 88
 
-   27 LOGICAL_EXP: OP_OP KW_LESS EXP EXP . OP_CP
+   18 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP OP_CP .
 
-    OP_CP  shift, and go to state 106
+    $default  reduce using rule 18 (ARITHMETIC_EXP)
 
 
 state 89
 
-   19 ARITHMETIC_EXP: OP_OP OP_PLUS EXP EXP OP_CP .
+   19 ARITHMETIC_EXP: OP_OP OP_MINUS EXP EXP OP_CP .
 
     $default  reduce using rule 19 (ARITHMETIC_EXP)
 
 
 state 90
 
-   20 ARITHMETIC_EXP: OP_OP OP_MINUS EXP EXP OP_CP .
+   20 ARITHMETIC_EXP: OP_OP OP_MULT EXP EXP OP_CP .
 
     $default  reduce using rule 20 (ARITHMETIC_EXP)
 
 
 state 91
 
-   21 ARITHMETIC_EXP: OP_OP OP_MULT EXP EXP OP_CP .
+   21 ARITHMETIC_EXP: OP_OP OP_DIV EXP EXP OP_CP .
 
     $default  reduce using rule 21 (ARITHMETIC_EXP)
 
 
 state 92
 
-   22 ARITHMETIC_EXP: OP_OP OP_DIV EXP EXP OP_CP .
+   29 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP OP_CP .
 
-    $default  reduce using rule 22 (ARITHMETIC_EXP)
+    $default  reduce using rule 29 (ASSIGNMENT)
 
 
 state 93
 
-   30 ASSIGNMENT: OP_OP KW_SET IDENTIFIER EXP OP_CP .
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER . OP_CP EXP OP_CP
 
-    $default  reduce using rule 30 (ASSIGNMENT)
+    OP_CP  shift, and go to state 106
 
 
 state 94
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER . OP_CP EXP OP_CP
+   32 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP OP_CP .
 
-    OP_CP  shift, and go to state 107
+    $default  reduce using rule 32 (CONTROL_STATEMENT)
 
 
 state 95
 
-   33 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP OP_CP .
+   33 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP EXP . OP_CP
 
-    $default  reduce using rule 33 (CONTROL_STATEMENT)
+    OP_CP  shift, and go to state 107
 
 
 state 96
 
-   34 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP EXP . OP_CP
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP . EXP OP_CP
 
-    OP_CP  shift, and go to state 108
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXP                go to state 108
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 97
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP . EXP OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP . EXP OP_CP EXPLIST OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1432,101 +1416,75 @@ state 97
     EXP                go to state 109
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 98
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP . EXP OP_CP EXPLIST OP_CP
+   40 LIST: OP_OP KW_LIST OP_OP VALUES OP_CP . OP_CP
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXP                go to state 110
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    OP_CP  shift, and go to state 110
 
 
 state 99
 
-   41 LIST: OP_OP KW_LIST OP_OP VALUES OP_CP . OP_CP
+   43 VALUES: VALUES OP_COMMA . VALUEF
 
-    OP_CP  shift, and go to state 111
+    VALUEF  shift, and go to state 111
 
 
 state 100
 
-   44 VALUES: VALUES OP_COMMA . VALUEF
+   41 LIST: OP_OP KW_APPEND LIST EXP OP_CP .
 
-    VALUEF  shift, and go to state 112
+    $default  reduce using rule 41 (LIST)
 
 
 state 101
 
-   42 LIST: OP_OP KW_APPEND LIST EXP OP_CP .
+   42 LIST: OP_OP KW_CONCAT LIST LIST OP_CP .
 
     $default  reduce using rule 42 (LIST)
 
 
 state 102
 
-   43 LIST: OP_OP KW_CONCAT LIST LIST OP_CP .
-
-    $default  reduce using rule 43 (LIST)
-
-
-state 103
-
-   23 LOGICAL_EXP: OP_OP KW_AND EXP EXP OP_CP .
-
-    $default  reduce using rule 23 (LOGICAL_EXP)
-
-
-state 104
-
-   24 LOGICAL_EXP: OP_OP KW_OR EXP EXP OP_CP .
+   24 LOGICAL_EXP: OP_OP KW_AND EXP EXP OP_CP .
 
     $default  reduce using rule 24 (LOGICAL_EXP)
 
 
-state 105
+state 103
 
-   26 LOGICAL_EXP: OP_OP KW_EQUAL EXP EXP OP_CP .
+   25 LOGICAL_EXP: OP_OP KW_OR EXP EXP OP_CP .
 
-    $default  reduce using rule 26 (LOGICAL_EXP)
+    $default  reduce using rule 25 (LOGICAL_EXP)
 
 
-state 106
+state 104
 
-   27 LOGICAL_EXP: OP_OP KW_LESS EXP EXP OP_CP .
+   27 LOGICAL_EXP: OP_OP KW_EQUAL EXP EXP OP_CP .
 
     $default  reduce using rule 27 (LOGICAL_EXP)
 
 
-state 107
+state 105
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP . EXP OP_CP
+   28 LOGICAL_EXP: OP_OP KW_LESS EXP EXP OP_CP .
+
+    $default  reduce using rule 28 (LOGICAL_EXP)
+
+
+state 106
+
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP . EXP OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
@@ -1535,131 +1493,128 @@ state 107
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 113
+    EXP                go to state 112
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
+
+
+state 107
+
+   33 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP EXP OP_CP .
+
+    $default  reduce using rule 33 (CONTROL_STATEMENT)
 
 
 state 108
 
-   34 CONTROL_STATEMENT: OP_OP KW_IF EXP EXP EXP OP_CP .
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP EXP . OP_CP
 
-    $default  reduce using rule 34 (CONTROL_STATEMENT)
+    OP_CP  shift, and go to state 113
 
 
 state 109
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP EXP . OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP . OP_CP EXPLIST OP_CP
 
     OP_CP  shift, and go to state 114
 
 
 state 110
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP . OP_CP EXPLIST OP_CP
+   40 LIST: OP_OP KW_LIST OP_OP VALUES OP_CP OP_CP .
 
-    OP_CP  shift, and go to state 115
+    $default  reduce using rule 40 (LIST)
 
 
 state 111
 
-   41 LIST: OP_OP KW_LIST OP_OP VALUES OP_CP OP_CP .
+   43 VALUES: VALUES OP_COMMA VALUEF .
 
-    $default  reduce using rule 41 (LIST)
+    $default  reduce using rule 43 (VALUES)
 
 
 state 112
 
-   44 VALUES: VALUES OP_COMMA VALUEF .
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP . OP_CP
 
-    $default  reduce using rule 44 (VALUES)
+    OP_CP  shift, and go to state 115
 
 
 state 113
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP . OP_CP
+   34 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP .
 
-    OP_CP  shift, and go to state 116
+    $default  reduce using rule 34 (CONTROL_STATEMENT)
 
 
 state 114
 
-   35 CONTROL_STATEMENT: OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP .
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP . EXPLIST OP_CP
 
-    $default  reduce using rule 35 (CONTROL_STATEMENT)
+    VALUEF      shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    OP_OP       shift, and go to state 3
+    KW_TRUE     shift, and go to state 4
+    KW_FALSE    shift, and go to state 5
+    KW_NIL      shift, and go to state 6
+
+    EXPLIST            go to state 116
+    EXP                go to state 10
+    ARITHMETIC_EXP     go to state 11
+    LOGICAL_EXP        go to state 12
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
 state 115
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP . EXPLIST OP_CP
+   31 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP .
 
-    VALUEF      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    OP_OP       shift, and go to state 3
-    KW_TRUE     shift, and go to state 4
-    KW_FALSE    shift, and go to state 5
-    KW_NIL      shift, and go to state 6
-
-    EXPLIST            go to state 117
-    EXP                go to state 10
-    ARITHMETIC_EXP     go to state 11
-    LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    $default  reduce using rule 31 (FUNCTION_DEF)
 
 
 state 116
 
-   32 FUNCTION_DEF: OP_OP KW_DEFFUN IDENTIFIER OP_OP IDENTIFIER OP_CP EXP OP_CP .
-
-    $default  reduce using rule 32 (FUNCTION_DEF)
-
-
-state 117
-
     4 EXPLIST: EXPLIST . EXP
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST . OP_CP
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST . OP_CP
 
     VALUEF      shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     OP_OP       shift, and go to state 3
-    OP_CP       shift, and go to state 118
+    OP_CP       shift, and go to state 117
     KW_TRUE     shift, and go to state 4
     KW_FALSE    shift, and go to state 5
     KW_NIL      shift, and go to state 6
 
-    EXP                go to state 44
+    EXP                go to state 43
     ARITHMETIC_EXP     go to state 11
     LOGICAL_EXP        go to state 12
-    BOOLEAN            go to state 13
-    ASSIGNMENT         go to state 14
-    FCALL              go to state 15
-    FUNCTION_DEF       go to state 16
-    CONTROL_STATEMENT  go to state 17
-    DISPLAY            go to state 18
-    EXIT               go to state 19
-    LIST               go to state 20
-    LOAD               go to state 21
+    ASSIGNMENT         go to state 13
+    FCALL              go to state 14
+    FUNCTION_DEF       go to state 15
+    CONTROL_STATEMENT  go to state 16
+    DISPLAY            go to state 17
+    EXIT               go to state 18
+    LIST               go to state 19
+    LOAD               go to state 20
 
 
-state 118
+state 117
 
-   36 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP .
+   35 CONTROL_STATEMENT: OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP .
 
-    $default  reduce using rule 36 (CONTROL_STATEMENT)
+    $default  reduce using rule 35 (CONTROL_STATEMENT)
