@@ -104,7 +104,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 167 "src/gpp_interpreter.y"
+#line 89 "src/gpp_interpreter.y"
 {
     float fval;
     char *sval;

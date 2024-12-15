@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-// Forward declarations
 int yylex(void);
 void yyerror(const char *s);
 extern FILE *yyin;
@@ -13,9 +12,11 @@ extern FILE *yyin;
 #define DEBUG_NONE 0
 #define DEBUG_BASIC 1
 #define DEBUG_VERBOSE 2
-int debug_level = DEBUG_BASIC;
+int debug_level = DEBUG_NONE;
 
 #define MAX_INCLUDE_DEPTH 10
+#define MAX_SYMBOLS 100
+#define MAX_CHILDREN 100
 
 FILE* input_stack[MAX_INCLUDE_DEPTH];
 int input_stack_top = -1;
@@ -37,11 +38,31 @@ typedef struct Node {
     float value;
     struct Node* left;
     struct Node* right;
-    struct Node* next;  // For list nodes
+    struct Node* next[MAX_CHILDREN];  // For list nodes
+    int next_count;
 } Node;
 
-// Global variables
-Node* root_node = NULL;
+// Symbol table structure
+typedef struct {
+    char *name;
+    float value;
+    Node* node;  // Reference to parse tree node
+} symbol_t;
+
+typedef struct ParseState {
+    FILE* file;
+    Node* root;
+    int in_load;
+    symbol_t symbols[MAX_SYMBOLS];  // Symbol table
+    int symbol_count;       // Symbol count
+} ParseState;
+
+ParseState current_state = {
+    .file = NULL,
+    .root = NULL,
+    .in_load = 0,
+    .symbol_count = 0
+};
 
 // Add value accessor functions
 float get_node_value(Node* node) {
@@ -52,114 +73,15 @@ char* get_node_name(Node* node) {
     if (!node) return NULL;
     return node->name;
 }
-// Debug functions
-void print_indent(int depth) {
-    for(int i = 0; i < depth; i++) printf("  ");
-}
 
-void print_node(Node* node, int depth) {
-    if (!node) return;
-    
-    print_indent(depth);
-    switch(node->type) {
-        case NODE_VALUE:
-            printf("VALUE: %f\n", node->value);
-            break;
-        case NODE_IDENTIFIER:
-            printf("ID: %s = %f\n", node->name, node->value);
-            break;
-        case NODE_OPERATOR:
-            printf("OP: %s\n", node->name);
-            break;
-        case NODE_CONTROL:
-            printf("CONTROL: %s\n", node->name);
-            break;
-        case NODE_FUNCTION:
-            printf("FUNCTION: %s\n", node->name);
-            break;
-        case NODE_LIST:
-            printf("LIST: %s\n", node->name);
-            break;
-    }
-    
-    if (node->left) {
-        print_indent(depth);
-        printf("LEFT:\n");
-        print_node(node->left, depth + 1);
-    }
-    if (node->right) {
-        print_indent(depth);
-        printf("RIGHT:\n");
-        print_node(node->right, depth + 1);
-    }
-    if (node->next) {
-        print_indent(depth);
-        printf("NEXT:\n");
-        print_node(node->next, depth + 1);
-    }
-}
-
-// Node creation helper
-Node* create_node(NodeType type, const char* name, float value) {
-    Node* node = malloc(sizeof(Node));
-    node->type = type;
-    node->name = name ? strdup(name) : NULL;
-    node->value = value;
-    node->left = node->right = node->next = NULL;
-    if (debug_level >= DEBUG_VERBOSE) {
-        printf("Created node: ");
-        print_node(node, 0);
-    }
-    return node;
-}
-
-void debug_print(const char* msg, ...) {
-    if (debug_level >= DEBUG_BASIC) {
-        va_list args;
-        va_start(args, msg);
-        vprintf(msg, args);
-        va_end(args);
-    }
-}
-
-// Original symbol table code
-typedef struct {
-    char *name;
-    float value;
-    Node* node;  // Add reference to parse tree node
-} symbol_t;
-
-symbol_t symbol_table[100];
-int symbol_count = 0;
-
-float lookup_symbol(char *name) {
-    debug_print("Looking up symbol: %s\n", name);
-    for (int i = 0; i < symbol_count; i++) {
-        if (strcmp(symbol_table[i].name, name) == 0) {
-            debug_print("Found symbol %s = %f\n", name, symbol_table[i].value);
-            return symbol_table[i].value;
-        }
-    }
-    debug_print("Symbol not found: %s\n", name);
-    return 0.0;
-}
-
-void add_symbol(char *name, float value) {
-    debug_print("Adding/updating symbol: %s = %f\n", name, value);
-    for (int i = 0; i < symbol_count; i++) {
-        if (strcmp(symbol_table[i].name, name) == 0) {
-            symbol_table[i].value = value;
-            return;
-        }
-    }
-    symbol_table[symbol_count].name = strdup(name);
-    symbol_table[symbol_count].value = value;
-    symbol_table[symbol_count].node = create_node(NODE_IDENTIFIER, name, value);
-    symbol_count++;
-}
-
-Node* parse_file(FILE* file);
+void debug_print(const char* msg, ...);
+Node* create_node(NodeType type, const char* name, float value);
+float lookup_symbol(char *name);
+void add_symbol(char *name, float value);
 Node* load_file(const char* filename);
+Node* parse_file(FILE* file);
+void print_node(Node* node, int depth);
+
 
 %}
 
@@ -184,34 +106,33 @@ Node* load_file(const char* filename);
 %%
 START:
     INPUT { 
-        if (!root_node) {
-            root_node = create_node(NODE_LIST, "PROGRAM", 0);
-        }
-        
-        // Add new input to root node
-        if ($1) {
-            if (root_node->left == NULL) {
-                root_node->left = $1;
-            } else {
-                Node* current = root_node->left;
-                while (current->next != NULL) {
-                    current = current->next;
-                }
-                current->next = $1;
+        if (!current_state.in_load) {
+            if (!current_state.root) {
+                current_state.root = create_node(NODE_LIST, "PROGRAM", 0);
             }
+            if ($1) {
+                if (!current_state.root->left) {
+                    current_state.root->left = $1;
+                } else {
+                    Node* temp = current_state.root->left;
+                    while (temp->right) temp = temp->right;
+                    temp->right = $1;
+                }
+            }
+            $$ = current_state.root;
+        } else {
+            $$ = $1;
         }
-
-        $$ = root_node;
     }
     ;
 
 INPUT:
-    EXPLIST { $$ = $1; }
+    | EXPLIST { $$ = $1; }
     ;
 
 EXPLIST:
     EXPLIST EXP { 
-        $$ = create_node(NODE_LIST, "EXPLIST", 0);
+        $$ = create_node(NODE_LIST, "EXPLIST", get_node_value($2));
         $$->left = $1;
         $$->right = $2;
     }
@@ -294,7 +215,7 @@ BOOLEAN:
     ;
 
 ASSIGNMENT:
-    OP_OP KW_SET IDENTIFIER EXPLIST OP_CP { 
+    OP_OP KW_SET IDENTIFIER EXP OP_CP { 
         add_symbol($3, get_node_value($4));
         $$ = create_node(NODE_CONTROL, "SET", get_node_value($4));
         $$->left = create_node(NODE_IDENTIFIER, $3, get_node_value($4));
@@ -336,21 +257,24 @@ CONTROL_STATEMENT:
             $$->right = $5;
         }
     }
-    | OP_OP KW_WHILE OP_OP EXP OP_CP EXPLIST OP_CP {
+    | OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP {
         $$ = create_node(NODE_CONTROL, "WHILE", 0.0);
         $$->left = $4;
-        $$->right = $6;
+        $$->next[0] = $6;
+        $$->next_count = 1;
     }
     | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP {
         $$ = create_node(NODE_CONTROL, "FOR", 0.0);
-        $$->left = create_node(NODE_IDENTIFIER, $4, get_node_value($5));
-        $$->right = $8;
-        $$->next = create_node(NODE_VALUE, NULL, get_node_value($6));
+        $$->left = $5;
+        $$->right = $6;
+        for (float val = get_node_value($5); val < get_node_value($6); val++) {
+            $$->next[$$->next_count++] = $8;
+        }
     }
     ;
 
 DISPLAY:
-    OP_OP KW_DISP EXP OP_CP {
+    OP_OP KW_DISP EXPLIST OP_CP {
         $$ = create_node(NODE_CONTROL, "DISPLAY", get_node_value($3));
         $$->left = $3;
         printf("Display: %f\n", get_node_value($3));
@@ -359,7 +283,7 @@ DISPLAY:
 
 EXIT:
     OP_OP KW_EXIT OP_CP {
-        $$ = create_node(NODE_CONTROL, "EXIT", 0.0);
+        $$ = create_node(NODE_CONTROL, "EXIT", -1);
     }
     ;
 
@@ -385,7 +309,6 @@ LIST:
 VALUES:
     VALUES OP_COMMA VALUEF {
         $$ = create_node(NODE_LIST, "VALUES", $3);
-        $$->next = $1;
     }
     | VALUEF {
         $$ = create_node(NODE_VALUE, NULL, $1);
@@ -394,12 +317,16 @@ VALUES:
 
 LOAD:
     OP_OP KW_LOAD IDENTIFIER OP_CP {
-        $$ = create_node(NODE_CONTROL, "LOAD", 0.0);
+        $$ = create_node(NODE_CONTROL, "LOAD", -1);
+        $$->left = create_node(NODE_IDENTIFIER, $3, -1);
         Node* loaded_tree = load_file($3);
         if (!loaded_tree) {
             YYERROR;
         }
-        $$->left = loaded_tree;
+        $$->right = loaded_tree;
+        yyin = current_state.file;
+        yyparse();
+
     }
     ;
 
@@ -407,20 +334,21 @@ LOAD:
 
 void yyerror(const char *s) {
     fprintf(stderr, "Error: %s\n", s);
-    print_node(root_node, 0);
 }
 
 int main(int argc, char **argv) {
-    // Parse command line arguments
-    for(int i = 1; i < argc; i++) {
-        if(strcmp(argv[i], "-d0") == 0) {
+    current_state.file = stdin;
+    current_state.root = NULL;
+    current_state.in_load = 0;
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-d0") == 0) {
             debug_level = DEBUG_NONE;
-        } else if(strcmp(argv[i], "-d1") == 0) {
+        } else if (strcmp(argv[i], "-d1") == 0) {
             debug_level = DEBUG_BASIC;
-        } else if(strcmp(argv[i], "-d2") == 0) {
+        } else if (strcmp(argv[i], "-d2") == 0) {
             debug_level = DEBUG_VERBOSE;
         } else {
-            // Try to open as input file
             FILE *file = fopen(argv[i], "r");
             if (!file) {
                 perror(argv[i]);
@@ -430,59 +358,163 @@ int main(int argc, char **argv) {
         }
     }
 
-    // If no file specified, read from stdin
     if (!yyin) {
         yyin = stdin;
     }
 
     printf("GPP Interpreter starting (debug level: %d)\n", debug_level);
 
-    // Start parsing
-    yyparse();
-    printf("Parsing complete\n");
-    print_node(root_node, 0);
+   
+    int parse_result = yyparse();
+    if (parse_result != 0) {
+        fprintf(stderr, "Error parsing input\n");
+    }
+
+    print_node(current_state.root, 0);
 
     return 0;
 }
 
+void debug_print(const char* msg, ...) {
+    if (debug_level >= DEBUG_BASIC) {
+        va_list args;
+        va_start(args, msg);
+        vprintf(msg, args);
+        va_end(args);
+    }
+}
+
+Node* create_node(NodeType type, const char* name, float value) {
+    Node* node = malloc(sizeof(Node));
+    node->type = type;
+    node->name = name ? strdup(name) : NULL;
+    node->value = value;
+    node->left = NULL;
+    node->right = NULL;
+    node->next_count = 0;  // Initialize the counter
+    // No need to initialize next[]; it will be set when adding nodes
+    return node;
+}
+
+float lookup_symbol(char *name) {
+    for (int i = 0; i < current_state.symbol_count; i++) {
+        if (strcmp(current_state.symbols[i].name, name) == 0) {
+            debug_print("Found symbol %s = %f\n", name, current_state.symbols[i].value);
+            return current_state.symbols[i].value;
+        }
+    }
+    debug_print("Symbol not found: %s\n", name);
+    return 0.0;
+}
+
+void add_symbol(char *name, float value) {
+    for (int i = 0; i < current_state.symbol_count; i++) {
+        if (strcmp(current_state.symbols[i].name, name) == 0) {
+            current_state.symbols[i].value = value;
+            return;
+        }
+    }
+    current_state.symbols[current_state.symbol_count].name = strdup(name);
+    current_state.symbols[current_state.symbol_count].value = value;
+    current_state.symbols[current_state.symbol_count].node = create_node(NODE_IDENTIFIER, name, value);
+    current_state.symbol_count++;
+}
+
 Node* parse_file(FILE* file) {
-    // Mevcut durumu kaydet
-    FILE* old_yyin = yyin;
-    Node* old_root = root_node;
-    
-    // Yeni parse işlemi için hazırlık
+    // Save the current parsing state
+    ParseState saved_state = current_state;
+    FILE* saved_yyin = yyin;
+
+    // Set up the new parsing state
     yyin = file;
-    root_node = NULL;
-    
-    // Dosyayı parse et
-    yyparse();
-    
-    // Sonuçları kaydet
-    Node* result = root_node;
-    
-    // Eski duruma geri dön
-    root_node = old_root;
-    yyin = old_yyin;
-    
+    current_state.file = file;
+    current_state.root = NULL;
+    current_state.in_load = 0;
+
+    // Parse the file
+    int parse_result = yyparse();
+    if (parse_result != 0) {
+        fprintf(stderr, "Error parsing loaded file\n");
+        // Restore the previous state
+        current_state = saved_state;
+        yyin = saved_yyin;
+        return NULL;
+    }
+
+    // Collect the result
+    Node* result = current_state.root;
+
+    // Restore the previous parsing state
+    current_state.file = saved_state.file;
+    current_state.root = saved_state.root;
+    current_state.in_load = saved_state.in_load;
+    yyin = saved_yyin;
+
     return result;
 }
 
 Node* load_file(const char* filename) {
     FILE* new_file = fopen(filename, "r");
     if (!new_file) {
-        yyerror("Could not open file for loading");
+        fprintf(stderr, "Could not open file '%s' for loading\n", filename);
         return NULL;
     }
 
-    if (input_stack_top >= MAX_INCLUDE_DEPTH - 1) {
-        yyerror("Maximum include depth exceeded");
-        fclose(new_file);
-        return NULL;
-    }
-
-    // Dosyayı parse et ve sonucu al
+    // Parse the new file
     Node* loaded_tree = parse_file(new_file);
     fclose(new_file);
-    
+
+    if (!loaded_tree) {
+        fprintf(stderr, "Failed to load file: %s\n", filename);
+        return NULL;
+    }
+
     return loaded_tree;
+}
+
+void print_node(Node* node, int depth) {
+    if (!node) return;
+
+    for (int i = 0; i < depth; i++) printf("  ");
+    switch (node->type) {
+        case NODE_VALUE:
+            printf("VALUE: %f\n", node->value);
+            break;
+        case NODE_IDENTIFIER:
+            printf("ID: %s = %f\n", node->name, node->value);
+            break;
+        case NODE_OPERATOR:
+            printf("OP: %s\n", node->name);
+            break;
+        case NODE_CONTROL:
+            printf("CONTROL: %s\n", node->name);
+            break;
+        case NODE_FUNCTION:
+            printf("FUNCTION: %s\n", node->name);
+            break;
+        case NODE_LIST:
+            printf("LIST: %s\n", node->name);
+            break;
+    }
+    
+    // Printing left and right children
+    if (node->left) {
+        for (int i = 0; i < depth; i++) printf("  ");
+        printf("LEFT:\n");
+        print_node(node->left, depth + 1);
+    }
+    if (node->right) {
+        for (int i = 0; i < depth; i++) printf("  ");
+        printf("RIGHT:\n");
+        print_node(node->right, depth + 1);
+    }
+
+    // Printing next states
+    if (node->next_count > 0) {
+        for (int i = 0; i < depth; i++) printf("  ");
+        printf("NEXT[%d]:\n", node->next_count);
+        for (int i = 0; i < node->next_count; i++) {
+            print_node(node->next[i], depth + 1);
+        }
+    }
 }

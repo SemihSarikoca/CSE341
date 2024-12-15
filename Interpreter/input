@@ -1,7 +1,5 @@
-
-(deffun sumup(x) 
-    (if (equal x 0) 
-        1 
-        (+ x (sumup(-x 1)))
+(for (i 0 10) 
+    (if (equal i 5)
+        (exit)
     )
 )
