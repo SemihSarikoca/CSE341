@@ -104,13 +104,14 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 48 "src/gpp_interpreter.y"
+#line 167 "src/gpp_interpreter.y"
 {
     float fval;
     char *sval;
+    struct Node* node;
 }
 /* Line 1529 of yacc.c.  */
-#line 114 "build/gpp_parser.h"
+#line 115 "build/gpp_parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
