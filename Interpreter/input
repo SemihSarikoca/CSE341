@@ -1,5 +1,1 @@
-(for (i 0 10) 
-    (if (equal i 5)
-        (exit)
-    )
-)
+(set x 7)

@@ -141,7 +141,7 @@ int yylex(void);
 void yyerror(const char *s);
 extern FILE *yyin;
 
-// Debug levels
+// Debug levels base = 0
 #define DEBUG_NONE 0
 #define DEBUG_BASIC 1
 #define DEBUG_VERBOSE 2
@@ -197,7 +197,6 @@ ParseState current_state = {
     .symbol_count = 0
 };
 
-// Add value accessor functions
 float get_node_value(Node* node) {
     if (!node) return 0.0;
     return node->value;
@@ -238,14 +237,14 @@ void print_node(Node* node, int depth);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 89 "src/gpp_interpreter.y"
+#line 87 "src/gpp_interpreter.y"
 {
     float fval;
     char *sval;
     struct Node* node;
 }
 /* Line 193 of yacc.c.  */
-#line 249 "build/gpp_parser.c"
+#line 248 "build/gpp_parser.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -258,7 +257,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 262 "build/gpp_parser.c"
+#line 261 "build/gpp_parser.c"
 
 #ifdef short
 # undef short
@@ -473,7 +472,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  42
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   140
+#define YYLAST   142
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  31
@@ -482,7 +481,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  46
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  118
+#define YYNSTATES  116
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -533,8 +532,8 @@ static const yytype_uint8 yyprhs[] =
        0,     0,     3,     5,     7,     8,    11,    13,    15,    17,
       19,    21,    23,    25,    27,    29,    31,    33,    35,    37,
       43,    49,    55,    61,    63,    65,    71,    77,    82,    88,
-      94,   100,   105,   114,   120,   127,   135,   145,   150,   154,
-     156,   160,   167,   173,   179,   183,   185
+      94,   100,   105,   114,   120,   127,   133,   143,   148,   152,
+     154,   158,   165,   171,   177,   181,   183
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -552,23 +551,23 @@ static const yytype_int8 yyrhs[] =
       35,    35,    10,    -1,     9,    12,     4,    35,    10,    -1,
        9,     4,    35,    10,    -1,     9,    13,     4,     9,     4,
       10,    35,    10,    -1,     9,    14,    35,    35,    10,    -1,
-       9,    14,    35,    35,    35,    10,    -1,     9,    15,     9,
-      35,    10,    35,    10,    -1,     9,    16,     9,     4,    35,
-      35,    10,    34,    10,    -1,     9,    21,    34,    10,    -1,
-       9,    18,    10,    -1,    30,    -1,     9,    17,    10,    -1,
-       9,    17,     9,    45,    10,    10,    -1,     9,    19,    44,
-      35,    10,    -1,     9,    20,    44,    44,    10,    -1,    45,
-      11,     3,    -1,     3,    -1,     9,    22,     4,    10,    -1
+       9,    14,    35,    35,    35,    10,    -1,     9,    15,    35,
+      35,    10,    -1,     9,    16,     9,     4,    35,    35,    10,
+      34,    10,    -1,     9,    21,    34,    10,    -1,     9,    18,
+      10,    -1,    30,    -1,     9,    17,    10,    -1,     9,    17,
+       9,    45,    10,    10,    -1,     9,    19,    44,    35,    10,
+      -1,     9,    20,    44,    44,    10,    -1,    45,    11,     3,
+      -1,     3,    -1,     9,    22,     4,    10,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   108,   108,   130,   131,   135,   140,   144,   147,   150,
-     151,   152,   153,   154,   155,   156,   157,   158,   159,   163,
-     168,   173,   178,   186,   187,   188,   193,   198,   202,   207,
-     215,   224,   231,   239,   248,   257,   263,   274,   282,   288,
-     289,   290,   294,   299,   307,   310,   316
+       0,   105,   105,   121,   122,   126,   131,   135,   138,   141,
+     142,   143,   144,   145,   146,   147,   148,   149,   150,   154,
+     159,   164,   169,   177,   178,   179,   184,   189,   193,   198,
+     206,   215,   222,   230,   239,   248,   254,   265,   273,   279,
+     280,   281,   285,   290,   298,   301,   307
 };
 #endif
 
@@ -616,7 +615,7 @@ static const yytype_uint8 yyr2[] =
        0,     2,     1,     1,     0,     2,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     5,
        5,     5,     5,     1,     1,     5,     5,     4,     5,     5,
-       5,     4,     8,     5,     6,     7,     9,     4,     3,     1,
+       5,     4,     8,     5,     6,     5,     9,     4,     3,     1,
        3,     6,     5,     5,     3,     1,     4
 };
 
@@ -634,9 +633,9 @@ static const yytype_uint8 yydefact[] =
        0,     0,     0,     0,     0,     0,     0,    31,     0,     0,
        0,     0,     0,     0,     0,     0,     0,    45,     0,     0,
        0,    37,    46,     0,     0,    27,     0,     0,    19,    20,
-      21,    22,    30,     0,    33,     0,     0,     0,     0,     0,
-      42,    43,    25,    26,    28,    29,     0,    34,     0,     0,
-      41,    44,     0,    35,     0,    32,     0,    36
+      21,    22,    30,     0,    33,     0,    35,     0,     0,     0,
+      42,    43,    25,    26,    28,    29,     0,    34,     0,    41,
+      44,     0,     0,    32,     0,    36
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -651,18 +650,18 @@ static const yytype_int8 yydefgoto[] =
 #define YYPACT_NINF -35
 static const yytype_int8 yypact[] =
 {
-      72,   -35,   -35,   111,   -35,   -35,   -35,     4,   -35,    72,
+      68,   -35,   -35,   113,   -35,   -35,   -35,     4,   -35,    68,
      -35,   -35,   -35,   -35,   -35,   -35,   -35,   -35,   -35,   -35,
-     -35,    72,    72,    72,    72,    72,    16,    17,    72,     2,
-      13,     0,    14,    -7,    -7,    72,    21,    72,    72,    72,
-      72,    72,   -35,   -35,    24,    72,    72,    72,    72,    72,
-      18,    72,    72,    22,    32,   -35,   -35,   -14,    72,    -7,
-      59,    31,    72,    72,    34,    72,    72,   -35,    35,    36,
-      37,    38,    40,    48,    68,    45,    72,   -35,     7,    49,
+     -35,    68,    68,    68,    68,    68,    17,    18,    68,    68,
+       2,     0,    14,    -7,    -7,    68,    21,    68,    68,    68,
+      68,    68,   -35,   -35,    16,    68,    68,    68,    68,    68,
+      25,    68,    68,    23,    32,   -35,   -35,   -14,    68,    -7,
+      59,    31,    68,    68,    34,    68,    68,   -35,    35,    36,
+      37,    38,    40,    48,    70,    45,    68,   -35,     7,    49,
       50,   -35,   -35,    51,    54,   -35,    56,    60,   -35,   -35,
-     -35,   -35,   -35,    63,   -35,    64,    72,    72,    69,    55,
-     -35,   -35,   -35,   -35,   -35,   -35,    72,   -35,    74,    75,
-     -35,   -35,    76,   -35,    72,   -35,    90,   -35
+     -35,   -35,   -35,    65,   -35,    66,   -35,    68,    71,    55,
+     -35,   -35,   -35,   -35,   -35,   -35,    68,   -35,    74,   -35,
+     -35,    75,    68,   -35,    92,   -35
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -680,39 +679,39 @@ static const yytype_int8 yypgoto[] =
 static const yytype_uint8 yytable[] =
 {
       43,    60,    57,    31,    42,    33,    34,    58,    59,    54,
-      55,    52,    44,    45,    46,    47,    48,    98,    99,    51,
-      49,    50,    53,     6,    56,    61,    76,    73,    62,    63,
-      64,    65,    66,    80,    67,    77,    68,    69,    70,    71,
+      55,    53,    44,    45,    46,    47,    48,    98,    99,    51,
+      52,    49,    50,     6,    56,    61,    67,    76,    62,    63,
+      64,    65,    66,    80,    73,    77,    68,    69,    70,    71,
       72,    82,    74,    75,    85,    88,    89,    90,    91,    79,
-      92,    43,    93,    83,    84,    96,    86,    87,   111,   100,
+      92,    43,    93,    83,    84,    96,    86,    87,   110,   100,
      101,   102,     1,     2,   103,    95,   104,    97,     3,    81,
-     105,     1,     2,   106,   107,     1,     2,     3,    94,   110,
-     116,     3,     4,     5,   113,   114,   115,   108,   109,     6,
-       0,     4,     5,     1,     2,     4,     5,   112,     6,     3,
-     117,     0,     6,     0,     0,     0,     0,    43,     0,     0,
-       0,     0,     0,     4,     5,    21,    22,    23,    24,    25,
-       6,     0,     0,    26,    27,    28,    29,    30,    31,    32,
-      33,    34,    35,    36,     0,     0,    37,    38,    39,    40,
-      41
+     105,     1,     2,     1,     2,   106,   107,     3,   114,     3,
+      94,   109,     4,     5,   112,   113,     0,     0,   108,     6,
+       0,     4,     5,     4,     5,     1,     2,   111,     6,     0,
+       6,     3,   115,     0,     0,    43,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     4,     5,    21,    22,    23,
+      24,    25,     6,     0,     0,    26,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    36,     0,     0,    37,    38,
+      39,    40,    41
 };
 
 static const yytype_int8 yycheck[] =
 {
        9,    35,     9,    17,     0,    19,    20,    33,    34,     9,
       10,     9,    21,    22,    23,    24,    25,    10,    11,    28,
-       4,     4,     9,    30,    10,     4,     4,     9,    37,    38,
-      39,    40,    41,    59,    10,     3,    45,    46,    47,    48,
+      29,     4,     4,    30,    10,     4,    10,     4,    37,    38,
+      39,    40,    41,    59,     9,     3,    45,    46,    47,    48,
       49,    10,    51,    52,    10,    10,    10,    10,    10,    58,
       10,    60,     4,    62,    63,    10,    65,    66,     3,    10,
       10,    10,     3,     4,    10,    74,    10,    76,     9,    10,
-      10,     3,     4,    10,    10,     3,     4,     9,    10,    10,
-     114,     9,    23,    24,    10,    10,    10,    96,    97,    30,
-      -1,    23,    24,     3,     4,    23,    24,   106,    30,     9,
-      10,    -1,    30,    -1,    -1,    -1,    -1,   116,    -1,    -1,
-      -1,    -1,    -1,    23,    24,     4,     5,     6,     7,     8,
-      30,    -1,    -1,    12,    13,    14,    15,    16,    17,    18,
-      19,    20,    21,    22,    -1,    -1,    25,    26,    27,    28,
-      29
+      10,     3,     4,     3,     4,    10,    10,     9,   112,     9,
+      10,    10,    23,    24,    10,    10,    -1,    -1,    97,    30,
+      -1,    23,    24,    23,    24,     3,     4,   106,    30,    -1,
+      30,     9,    10,    -1,    -1,   114,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    23,    24,     4,     5,     6,
+       7,     8,    30,    -1,    -1,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    21,    22,    -1,    -1,    25,    26,
+      27,    28,    29
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -724,13 +723,13 @@ static const yytype_uint8 yystos[] =
       46,     4,     5,     6,     7,     8,    12,    13,    14,    15,
       16,    17,    18,    19,    20,    21,    22,    25,    26,    27,
       28,    29,     0,    35,    35,    35,    35,    35,    35,     4,
-       4,    35,     9,     9,     9,    10,    10,     9,    44,    44,
+       4,    35,    35,     9,     9,    10,    10,     9,    44,    44,
       34,     4,    35,    35,    35,    35,    35,    10,    35,    35,
       35,    35,    35,     9,    35,    35,     4,     3,    45,    35,
       44,    10,    10,    35,    35,    10,    35,    35,    10,    10,
       10,    10,    10,     4,    10,    35,    10,    35,    10,    11,
-      10,    10,    10,    10,    10,    10,    10,    10,    35,    35,
-      10,     3,    35,    10,    10,    10,    34,    10
+      10,    10,    10,    10,    10,    10,    10,    10,    35,    10,
+       3,    35,    10,    10,    34,    10
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1545,21 +1544,15 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 108 "src/gpp_interpreter.y"
+#line 105 "src/gpp_interpreter.y"
     { 
         if (!current_state.in_load) {
             if (!current_state.root) {
-                current_state.root = create_node(NODE_LIST, "PROGRAM", 0);
+                current_state.root = create_node(NODE_LIST, "PROGRAM", -1);
             }
-            if ((yyvsp[(1) - (1)].node)) {
-                if (!current_state.root->left) {
-                    current_state.root->left = (yyvsp[(1) - (1)].node);
-                } else {
-                    Node* temp = current_state.root->left;
-                    while (temp->right) temp = temp->right;
-                    temp->right = (yyvsp[(1) - (1)].node);
-                }
-            }
+            
+            current_state.root->next[current_state.root->next_count++] = (yyvsp[(1) - (1)].node);
+  
             (yyval.node) = current_state.root;
         } else {
             (yyval.node) = (yyvsp[(1) - (1)].node);
@@ -1568,17 +1561,17 @@ yyreduce:
     break;
 
   case 3:
-#line 130 "src/gpp_interpreter.y"
+#line 121 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 4:
-#line 131 "src/gpp_interpreter.y"
+#line 122 "src/gpp_interpreter.y"
     { (yyval.node) = NULL; ;}
     break;
 
   case 5:
-#line 135 "src/gpp_interpreter.y"
+#line 126 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_LIST, "EXPLIST", get_node_value((yyvsp[(2) - (2)].node)));
         (yyval.node)->left = (yyvsp[(1) - (2)].node);
@@ -1587,76 +1580,76 @@ yyreduce:
     break;
 
   case 6:
-#line 140 "src/gpp_interpreter.y"
+#line 131 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 7:
-#line 144 "src/gpp_interpreter.y"
+#line 135 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_IDENTIFIER, (yyvsp[(1) - (1)].sval), lookup_symbol((yyvsp[(1) - (1)].sval)));
     ;}
     break;
 
   case 8:
-#line 147 "src/gpp_interpreter.y"
+#line 138 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_VALUE, NULL, (yyvsp[(1) - (1)].fval));
     ;}
     break;
 
   case 9:
-#line 150 "src/gpp_interpreter.y"
+#line 141 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 10:
-#line 151 "src/gpp_interpreter.y"
+#line 142 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 11:
-#line 152 "src/gpp_interpreter.y"
+#line 143 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 12:
-#line 153 "src/gpp_interpreter.y"
+#line 144 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 13:
-#line 154 "src/gpp_interpreter.y"
+#line 145 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 14:
-#line 155 "src/gpp_interpreter.y"
+#line 146 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 15:
-#line 156 "src/gpp_interpreter.y"
+#line 147 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 16:
-#line 157 "src/gpp_interpreter.y"
+#line 148 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 17:
-#line 158 "src/gpp_interpreter.y"
+#line 149 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 18:
-#line 159 "src/gpp_interpreter.y"
+#line 150 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 19:
-#line 163 "src/gpp_interpreter.y"
+#line 154 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_OPERATOR, "OP_PLUS", get_node_value((yyvsp[(3) - (5)].node)) + get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1665,7 +1658,7 @@ yyreduce:
     break;
 
   case 20:
-#line 168 "src/gpp_interpreter.y"
+#line 159 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_MINUS", get_node_value((yyvsp[(3) - (5)].node)) - get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1674,7 +1667,7 @@ yyreduce:
     break;
 
   case 21:
-#line 173 "src/gpp_interpreter.y"
+#line 164 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_MULT", get_node_value((yyvsp[(3) - (5)].node)) * get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1683,7 +1676,7 @@ yyreduce:
     break;
 
   case 22:
-#line 178 "src/gpp_interpreter.y"
+#line 169 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_DIV", get_node_value((yyvsp[(3) - (5)].node)) / get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1692,17 +1685,17 @@ yyreduce:
     break;
 
   case 23:
-#line 186 "src/gpp_interpreter.y"
+#line 177 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_VALUE, "TRUE", 1.0); ;}
     break;
 
   case 24:
-#line 187 "src/gpp_interpreter.y"
+#line 178 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_VALUE, "FALSE", 0.0); ;}
     break;
 
   case 25:
-#line 188 "src/gpp_interpreter.y"
+#line 179 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "AND", get_node_value((yyvsp[(3) - (5)].node)) && get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1711,7 +1704,7 @@ yyreduce:
     break;
 
   case 26:
-#line 193 "src/gpp_interpreter.y"
+#line 184 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OR", get_node_value((yyvsp[(3) - (5)].node)) || get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1720,7 +1713,7 @@ yyreduce:
     break;
 
   case 27:
-#line 198 "src/gpp_interpreter.y"
+#line 189 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "NOT", !get_node_value((yyvsp[(3) - (4)].node)));
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1728,7 +1721,7 @@ yyreduce:
     break;
 
   case 28:
-#line 202 "src/gpp_interpreter.y"
+#line 193 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "EQUAL", get_node_value((yyvsp[(3) - (5)].node)) == get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1737,7 +1730,7 @@ yyreduce:
     break;
 
   case 29:
-#line 207 "src/gpp_interpreter.y"
+#line 198 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "LESS", get_node_value((yyvsp[(3) - (5)].node)) < get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1746,7 +1739,7 @@ yyreduce:
     break;
 
   case 30:
-#line 215 "src/gpp_interpreter.y"
+#line 206 "src/gpp_interpreter.y"
     { 
         add_symbol((yyvsp[(3) - (5)].sval), get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node) = create_node(NODE_CONTROL, "SET", get_node_value((yyvsp[(4) - (5)].node)));
@@ -1756,7 +1749,7 @@ yyreduce:
     break;
 
   case 31:
-#line 224 "src/gpp_interpreter.y"
+#line 215 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_FUNCTION, (yyvsp[(2) - (4)].sval), 0.0);
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1764,7 +1757,7 @@ yyreduce:
     break;
 
   case 32:
-#line 231 "src/gpp_interpreter.y"
+#line 222 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_FUNCTION, (yyvsp[(3) - (8)].sval), 0.0);
         (yyval.node)->left = create_node(NODE_IDENTIFIER, (yyvsp[(5) - (8)].sval), 0.0);
@@ -1773,7 +1766,7 @@ yyreduce:
     break;
 
   case 33:
-#line 239 "src/gpp_interpreter.y"
+#line 230 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "IF", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1786,7 +1779,7 @@ yyreduce:
     break;
 
   case 34:
-#line 248 "src/gpp_interpreter.y"
+#line 239 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "IF-ELSE", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (6)].node);
@@ -1799,17 +1792,17 @@ yyreduce:
     break;
 
   case 35:
-#line 257 "src/gpp_interpreter.y"
+#line 248 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "WHILE", 0.0);
-        (yyval.node)->left = (yyvsp[(4) - (7)].node);
-        (yyval.node)->next[0] = (yyvsp[(6) - (7)].node);
+        (yyval.node)->left = (yyvsp[(3) - (5)].node);
+        (yyval.node)->next[0] = (yyvsp[(4) - (5)].node);
         (yyval.node)->next_count = 1;
     ;}
     break;
 
   case 36:
-#line 263 "src/gpp_interpreter.y"
+#line 254 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "FOR", 0.0);
         (yyval.node)->left = (yyvsp[(5) - (9)].node);
@@ -1821,7 +1814,7 @@ yyreduce:
     break;
 
   case 37:
-#line 274 "src/gpp_interpreter.y"
+#line 265 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "DISPLAY", get_node_value((yyvsp[(3) - (4)].node)));
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1830,24 +1823,24 @@ yyreduce:
     break;
 
   case 38:
-#line 282 "src/gpp_interpreter.y"
+#line 273 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "EXIT", -1);
     ;}
     break;
 
   case 39:
-#line 288 "src/gpp_interpreter.y"
+#line 279 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_LIST, "NIL", 0.0); ;}
     break;
 
   case 40:
-#line 289 "src/gpp_interpreter.y"
+#line 280 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_LIST, "EMPTY", 0.0); ;}
     break;
 
   case 41:
-#line 290 "src/gpp_interpreter.y"
+#line 281 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "LIST", 0.0);
         (yyval.node)->left = (yyvsp[(4) - (6)].node);
@@ -1855,7 +1848,7 @@ yyreduce:
     break;
 
   case 42:
-#line 294 "src/gpp_interpreter.y"
+#line 285 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "APPEND", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1864,7 +1857,7 @@ yyreduce:
     break;
 
   case 43:
-#line 299 "src/gpp_interpreter.y"
+#line 290 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "CONCAT", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1873,21 +1866,21 @@ yyreduce:
     break;
 
   case 44:
-#line 307 "src/gpp_interpreter.y"
+#line 298 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "VALUES", (yyvsp[(3) - (3)].fval));
     ;}
     break;
 
   case 45:
-#line 310 "src/gpp_interpreter.y"
+#line 301 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_VALUE, NULL, (yyvsp[(1) - (1)].fval));
     ;}
     break;
 
   case 46:
-#line 316 "src/gpp_interpreter.y"
+#line 307 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "LOAD", -1);
         (yyval.node)->left = create_node(NODE_IDENTIFIER, (yyvsp[(3) - (4)].sval), -1);
@@ -1896,7 +1889,7 @@ yyreduce:
             YYERROR;
         }
         (yyval.node)->right = loaded_tree;
-        yyin = current_state.file;
+
         yyparse();
 
     ;}
@@ -1904,7 +1897,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1908 "build/gpp_parser.c"
+#line 1901 "build/gpp_parser.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2118,7 +2111,7 @@ yyreturn:
 }
 
 
-#line 330 "src/gpp_interpreter.y"
+#line 321 "src/gpp_interpreter.y"
 
 
 void yyerror(const char *s) {
@@ -2180,8 +2173,7 @@ Node* create_node(NodeType type, const char* name, float value) {
     node->value = value;
     node->left = NULL;
     node->right = NULL;
-    node->next_count = 0;  // Initialize the counter
-    // No need to initialize next[]; it will be set when adding nodes
+    node->next_count = 0;
     return node;
 }
 
@@ -2210,17 +2202,14 @@ void add_symbol(char *name, float value) {
 }
 
 Node* parse_file(FILE* file) {
-    // Save the current parsing state
     ParseState saved_state = current_state;
     FILE* saved_yyin = yyin;
 
-    // Set up the new parsing state
     yyin = file;
     current_state.file = file;
     current_state.root = NULL;
     current_state.in_load = 0;
 
-    // Parse the file
     int parse_result = yyparse();
     if (parse_result != 0) {
         fprintf(stderr, "Error parsing loaded file\n");
@@ -2230,10 +2219,8 @@ Node* parse_file(FILE* file) {
         return NULL;
     }
 
-    // Collect the result
     Node* result = current_state.root;
 
-    // Restore the previous parsing state
     current_state.file = saved_state.file;
     current_state.root = saved_state.root;
     current_state.in_load = saved_state.in_load;

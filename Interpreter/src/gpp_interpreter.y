@@ -8,7 +8,7 @@ int yylex(void);
 void yyerror(const char *s);
 extern FILE *yyin;
 
-// Debug levels
+// Debug levels base = 0
 #define DEBUG_NONE 0
 #define DEBUG_BASIC 1
 #define DEBUG_VERBOSE 2
@@ -64,7 +64,6 @@ ParseState current_state = {
     .symbol_count = 0
 };
 
-// Add value accessor functions
 float get_node_value(Node* node) {
     if (!node) return 0.0;
     return node->value;
@@ -85,14 +84,12 @@ void print_node(Node* node, int depth);
 
 %}
 
-// Modify union to include Node*
 %union {
     float fval;
     char *sval;
     struct Node* node;
 }
 
-// Update type declarations
 %token <fval> VALUEF
 %token <sval> IDENTIFIER
 %token OP_PLUS OP_MINUS OP_MULT OP_DIV OP_OP OP_CP OP_COMMA
@@ -108,17 +105,9 @@ START:
     INPUT { 
         if (!current_state.in_load) {
             if (!current_state.root) {
-                current_state.root = create_node(NODE_LIST, "PROGRAM", 0);
+                current_state.root = create_node(NODE_LIST, "PROGRAM", -1);
             }
-            if ($1) {
-                if (!current_state.root->left) {
-                    current_state.root->left = $1;
-                } else {
-                    Node* temp = current_state.root->left;
-                    while (temp->right) temp = temp->right;
-                    temp->right = $1;
-                }
-            }
+            current_state.root->next[current_state.root->next_count++] = $1;
             $$ = current_state.root;
         } else {
             $$ = $1;
@@ -254,10 +243,10 @@ CONTROL_STATEMENT:
             $$->right = $5;
         }
     }
-    | OP_OP KW_WHILE OP_OP EXP OP_CP EXP OP_CP {
+    | OP_OP KW_WHILE EXP EXP OP_CP {
         $$ = create_node(NODE_CONTROL, "WHILE", 0.0);
-        $$->left = $4;
-        $$->next[0] = $6;
+        $$->left = $3;
+        $$->next[0] = $4;
         $$->next_count = 1;
     }
     | OP_OP KW_FOR OP_OP IDENTIFIER EXP EXP OP_CP EXPLIST OP_CP {
@@ -321,7 +310,7 @@ LOAD:
             YYERROR;
         }
         $$->right = loaded_tree;
-        yyin = current_state.file;
+
         yyparse();
 
     }
@@ -388,8 +377,7 @@ Node* create_node(NodeType type, const char* name, float value) {
     node->value = value;
     node->left = NULL;
     node->right = NULL;
-    node->next_count = 0;  // Initialize the counter
-    // No need to initialize next[]; it will be set when adding nodes
+    node->next_count = 0;
     return node;
 }
 
@@ -418,17 +406,14 @@ void add_symbol(char *name, float value) {
 }
 
 Node* parse_file(FILE* file) {
-    // Save the current parsing state
     ParseState saved_state = current_state;
     FILE* saved_yyin = yyin;
 
-    // Set up the new parsing state
     yyin = file;
     current_state.file = file;
     current_state.root = NULL;
     current_state.in_load = 0;
 
-    // Parse the file
     int parse_result = yyparse();
     if (parse_result != 0) {
         fprintf(stderr, "Error parsing loaded file\n");
@@ -438,10 +423,8 @@ Node* parse_file(FILE* file) {
         return NULL;
     }
 
-    // Collect the result
     Node* result = current_state.root;
 
-    // Restore the previous parsing state
     current_state.file = saved_state.file;
     current_state.root = saved_state.root;
     current_state.in_load = saved_state.in_load;
