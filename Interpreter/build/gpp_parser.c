@@ -563,11 +563,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   105,   105,   121,   122,   126,   131,   135,   138,   141,
-     142,   143,   144,   145,   146,   147,   148,   149,   150,   154,
-     159,   164,   169,   177,   178,   179,   184,   189,   193,   198,
-     206,   215,   222,   230,   239,   248,   254,   265,   273,   279,
-     280,   281,   285,   290,   298,   301,   307
+       0,   105,   105,   119,   120,   124,   129,   133,   136,   139,
+     140,   141,   142,   143,   144,   145,   146,   147,   148,   152,
+     157,   162,   167,   175,   176,   177,   182,   187,   191,   196,
+     204,   213,   220,   228,   237,   246,   252,   263,   271,   277,
+     278,   279,   283,   288,   296,   299,   305
 };
 #endif
 
@@ -1550,9 +1550,7 @@ yyreduce:
             if (!current_state.root) {
                 current_state.root = create_node(NODE_LIST, "PROGRAM", -1);
             }
-            
             current_state.root->next[current_state.root->next_count++] = (yyvsp[(1) - (1)].node);
-  
             (yyval.node) = current_state.root;
         } else {
             (yyval.node) = (yyvsp[(1) - (1)].node);
@@ -1561,17 +1559,17 @@ yyreduce:
     break;
 
   case 3:
-#line 121 "src/gpp_interpreter.y"
+#line 119 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 4:
-#line 122 "src/gpp_interpreter.y"
+#line 120 "src/gpp_interpreter.y"
     { (yyval.node) = NULL; ;}
     break;
 
   case 5:
-#line 126 "src/gpp_interpreter.y"
+#line 124 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_LIST, "EXPLIST", get_node_value((yyvsp[(2) - (2)].node)));
         (yyval.node)->left = (yyvsp[(1) - (2)].node);
@@ -1580,76 +1578,76 @@ yyreduce:
     break;
 
   case 6:
-#line 131 "src/gpp_interpreter.y"
+#line 129 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 7:
-#line 135 "src/gpp_interpreter.y"
+#line 133 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_IDENTIFIER, (yyvsp[(1) - (1)].sval), lookup_symbol((yyvsp[(1) - (1)].sval)));
     ;}
     break;
 
   case 8:
-#line 138 "src/gpp_interpreter.y"
+#line 136 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_VALUE, NULL, (yyvsp[(1) - (1)].fval));
     ;}
     break;
 
   case 9:
-#line 141 "src/gpp_interpreter.y"
+#line 139 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 10:
-#line 142 "src/gpp_interpreter.y"
+#line 140 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 11:
-#line 143 "src/gpp_interpreter.y"
+#line 141 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 12:
-#line 144 "src/gpp_interpreter.y"
+#line 142 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 13:
-#line 145 "src/gpp_interpreter.y"
+#line 143 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 14:
-#line 146 "src/gpp_interpreter.y"
+#line 144 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 15:
-#line 147 "src/gpp_interpreter.y"
+#line 145 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 16:
-#line 148 "src/gpp_interpreter.y"
+#line 146 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 17:
-#line 149 "src/gpp_interpreter.y"
+#line 147 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 18:
-#line 150 "src/gpp_interpreter.y"
+#line 148 "src/gpp_interpreter.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 19:
-#line 154 "src/gpp_interpreter.y"
+#line 152 "src/gpp_interpreter.y"
     { 
         (yyval.node) = create_node(NODE_OPERATOR, "OP_PLUS", get_node_value((yyvsp[(3) - (5)].node)) + get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1658,7 +1656,7 @@ yyreduce:
     break;
 
   case 20:
-#line 159 "src/gpp_interpreter.y"
+#line 157 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_MINUS", get_node_value((yyvsp[(3) - (5)].node)) - get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1667,7 +1665,7 @@ yyreduce:
     break;
 
   case 21:
-#line 164 "src/gpp_interpreter.y"
+#line 162 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_MULT", get_node_value((yyvsp[(3) - (5)].node)) * get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1676,7 +1674,7 @@ yyreduce:
     break;
 
   case 22:
-#line 169 "src/gpp_interpreter.y"
+#line 167 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OP_DIV", get_node_value((yyvsp[(3) - (5)].node)) / get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1685,17 +1683,17 @@ yyreduce:
     break;
 
   case 23:
-#line 177 "src/gpp_interpreter.y"
+#line 175 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_VALUE, "TRUE", 1.0); ;}
     break;
 
   case 24:
-#line 178 "src/gpp_interpreter.y"
+#line 176 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_VALUE, "FALSE", 0.0); ;}
     break;
 
   case 25:
-#line 179 "src/gpp_interpreter.y"
+#line 177 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "AND", get_node_value((yyvsp[(3) - (5)].node)) && get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1704,7 +1702,7 @@ yyreduce:
     break;
 
   case 26:
-#line 184 "src/gpp_interpreter.y"
+#line 182 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "OR", get_node_value((yyvsp[(3) - (5)].node)) || get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1713,7 +1711,7 @@ yyreduce:
     break;
 
   case 27:
-#line 189 "src/gpp_interpreter.y"
+#line 187 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "NOT", !get_node_value((yyvsp[(3) - (4)].node)));
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1721,7 +1719,7 @@ yyreduce:
     break;
 
   case 28:
-#line 193 "src/gpp_interpreter.y"
+#line 191 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "EQUAL", get_node_value((yyvsp[(3) - (5)].node)) == get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1730,7 +1728,7 @@ yyreduce:
     break;
 
   case 29:
-#line 198 "src/gpp_interpreter.y"
+#line 196 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_OPERATOR, "LESS", get_node_value((yyvsp[(3) - (5)].node)) < get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1739,7 +1737,7 @@ yyreduce:
     break;
 
   case 30:
-#line 206 "src/gpp_interpreter.y"
+#line 204 "src/gpp_interpreter.y"
     { 
         add_symbol((yyvsp[(3) - (5)].sval), get_node_value((yyvsp[(4) - (5)].node)));
         (yyval.node) = create_node(NODE_CONTROL, "SET", get_node_value((yyvsp[(4) - (5)].node)));
@@ -1749,7 +1747,7 @@ yyreduce:
     break;
 
   case 31:
-#line 215 "src/gpp_interpreter.y"
+#line 213 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_FUNCTION, (yyvsp[(2) - (4)].sval), 0.0);
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1757,7 +1755,7 @@ yyreduce:
     break;
 
   case 32:
-#line 222 "src/gpp_interpreter.y"
+#line 220 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_FUNCTION, (yyvsp[(3) - (8)].sval), 0.0);
         (yyval.node)->left = create_node(NODE_IDENTIFIER, (yyvsp[(5) - (8)].sval), 0.0);
@@ -1766,7 +1764,7 @@ yyreduce:
     break;
 
   case 33:
-#line 230 "src/gpp_interpreter.y"
+#line 228 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "IF", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1779,7 +1777,7 @@ yyreduce:
     break;
 
   case 34:
-#line 239 "src/gpp_interpreter.y"
+#line 237 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "IF-ELSE", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (6)].node);
@@ -1792,7 +1790,7 @@ yyreduce:
     break;
 
   case 35:
-#line 248 "src/gpp_interpreter.y"
+#line 246 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "WHILE", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1802,7 +1800,7 @@ yyreduce:
     break;
 
   case 36:
-#line 254 "src/gpp_interpreter.y"
+#line 252 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "FOR", 0.0);
         (yyval.node)->left = (yyvsp[(5) - (9)].node);
@@ -1814,7 +1812,7 @@ yyreduce:
     break;
 
   case 37:
-#line 265 "src/gpp_interpreter.y"
+#line 263 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "DISPLAY", get_node_value((yyvsp[(3) - (4)].node)));
         (yyval.node)->left = (yyvsp[(3) - (4)].node);
@@ -1823,24 +1821,24 @@ yyreduce:
     break;
 
   case 38:
-#line 273 "src/gpp_interpreter.y"
+#line 271 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "EXIT", -1);
     ;}
     break;
 
   case 39:
-#line 279 "src/gpp_interpreter.y"
+#line 277 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_LIST, "NIL", 0.0); ;}
     break;
 
   case 40:
-#line 280 "src/gpp_interpreter.y"
+#line 278 "src/gpp_interpreter.y"
     { (yyval.node) = create_node(NODE_LIST, "EMPTY", 0.0); ;}
     break;
 
   case 41:
-#line 281 "src/gpp_interpreter.y"
+#line 279 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "LIST", 0.0);
         (yyval.node)->left = (yyvsp[(4) - (6)].node);
@@ -1848,7 +1846,7 @@ yyreduce:
     break;
 
   case 42:
-#line 285 "src/gpp_interpreter.y"
+#line 283 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "APPEND", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1857,7 +1855,7 @@ yyreduce:
     break;
 
   case 43:
-#line 290 "src/gpp_interpreter.y"
+#line 288 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "CONCAT", 0.0);
         (yyval.node)->left = (yyvsp[(3) - (5)].node);
@@ -1866,21 +1864,21 @@ yyreduce:
     break;
 
   case 44:
-#line 298 "src/gpp_interpreter.y"
+#line 296 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_LIST, "VALUES", (yyvsp[(3) - (3)].fval));
     ;}
     break;
 
   case 45:
-#line 301 "src/gpp_interpreter.y"
+#line 299 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_VALUE, NULL, (yyvsp[(1) - (1)].fval));
     ;}
     break;
 
   case 46:
-#line 307 "src/gpp_interpreter.y"
+#line 305 "src/gpp_interpreter.y"
     {
         (yyval.node) = create_node(NODE_CONTROL, "LOAD", -1);
         (yyval.node)->left = create_node(NODE_IDENTIFIER, (yyvsp[(3) - (4)].sval), -1);
@@ -1897,7 +1895,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1901 "build/gpp_parser.c"
+#line 1899 "build/gpp_parser.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2111,7 +2109,7 @@ yyreturn:
 }
 
 
-#line 321 "src/gpp_interpreter.y"
+#line 319 "src/gpp_interpreter.y"
 
 
 void yyerror(const char *s) {
